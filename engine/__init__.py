@@ -1,3 +1,3 @@
-from .engine import SyntaxNodeEngine
+from .core import SyntaxNodeEngine
 
-__all__ = ['SyntaxNodeEngine']
+__all__ = ["SyntaxNodeEngine"]

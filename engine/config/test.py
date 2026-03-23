@@ -14,23 +14,26 @@ assert 'snake_case' in feature.info() and 'true_property' in feature.info()
 
 import json as json
 
-class QtConfig():
+class TestConfig():
     def __init__(self):
         self.__objects_implemented = (QObject, QWidget, QAbstractButton, QPushButton, QLayout, QBoxLayout, QVBoxLayout, QFrame, 
                                       QLabel)
         self.__primitives_types = (int, str, bool, float)
-        self.__complex_types_implemented = {QSizePolicy: ("size_policy", {"horizontal_policy":QSizePolicy.Policy, "vertical_policy": QSizePolicy.Policy, "horizontal_stretch":int, "vertical_stretch":int}),
-                                            QRect: ("rectangle", {"x":int, "y":int, "width":int, "height":int}),
-                                            QPoint: ("point", {"x":int, "y":int}),
-                                            QSize: ("size", {"width":int, "height":int}),
-                                            QMargins: ("margin", {"left":int, "top":int, "right":int, "bottom":int}),
-                                            QFont: ("font", {"family":str, "point_size":int, "weight":int, "italic":bool}),
-                                            QColor: ("color", {"red":int, "green":int, "blue":int, "alpha":int})}
+        
+        self.__complex_types_implemented = {QSizePolicy: ("QSizePolicy", {"horizontal_policy":QSizePolicy.Policy, "vertical_policy": QSizePolicy.Policy, "horizontal_stretch":int, "vertical_stretch":int}),
+                                            QRect: ("QRect", {"x":int, "y":int, "width":int, "height":int}),
+                                            QPoint: ("QPoint", {"x":int, "y":int}),
+                                            QSize: ("QSize", {"width":int, "height":int}),
+                                            QMargins: ("QMargins", {"left":int, "top":int, "right":int, "bottom":int}),
+                                            QFont: ("QFont", {"family":str, "point_size":int, "weight":int, "italic":bool}),
+                                            QColor: ("QColor", {"red":int, "green":int, "blue":int, "alpha":int})}
         
         self.__enum_implemented = (QSizePolicy.Policy, Qt.FocusPolicy, Qt.ContextMenuPolicy, Qt.LayoutDirection, QFrame.Shape, 
                                    QFrame.Shadow, Qt.TextFormat, QLayout.SizeConstraint)
         self.__flags_implemented = (Qt.AlignmentFlag, Qt.InputMethodHint, Qt.TextInteractionFlag)
         
+        Qt.AlignmentFlag._value2member_map_
+
         self.__params_implemented = ("enabled", "geometry", "pos", "frame_size", "size", "alignment", "object_name",
                                      "rect", "children_rect", "size_policy", "minimum_size", "maximum_size", "minimum_width", 
                                      "minimum_height", "maximum_width", "maximum_height", "font", "focus_policy", "focus", 
@@ -89,3 +92,6 @@ class QtConfig():
     @property
     def type_map(self):
         return self.__type_map
+    
+    def is_param_supported(self, name:str) -> bool:
+        return name in self.__params_implemented
