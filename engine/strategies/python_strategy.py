@@ -14,12 +14,8 @@ class PythonStrategy(LanguageStrategy):
     @property
     def available_lib(self):
         return self._available_lib
-    
-    # def add_lib(self, library:str):
-    #     self._available_lib.append(library)
-    #     self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
 
     def get_code_files(self, library, data, metadata):
         if library not in self._directors:
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
-        self._directors[library].make(data, metadata)
+        return self._directors[library].make(data, metadata)

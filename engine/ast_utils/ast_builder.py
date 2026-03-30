@@ -21,12 +21,19 @@ class ASTBuilder(ABC):
         pass
 
     @abstractmethod
-    def build_import(self):
+    def build_import(self, data):
         pass
 
     @abstractmethod
-    def build_node(self):
+    def build_class(self, data):
         pass
+
+    @abstractmethod
+    def build_main(self, data_dict):
+        pass
+
+    def print_tree(self):
+        print(ast.dump(self._tree, indent=4))
 
     def fix_locations(self):
         ast.fix_missing_locations(self._tree)

@@ -98,16 +98,16 @@ class QtMetadataAdapter(MetadataAdapter):
         offset = 0 if recursive else self._meta.property_offset()
         properties = {}
         for idx in range(offset, self._meta.property_count()):
-        
             meta_property = self._meta.property(idx)
 
-            property_type = self.__config.type_map.get(meta_property.type_name())
-            property_name = mds.to_snake_case(meta_property.name())
+            if meta_property.is_writable():
+                property_type = self.__config.type_map.get(meta_property.type_name())
+                property_name = mds.to_snake_case(meta_property.name())
 
-            if property_type and self.__config.is_param_supported(property_name):
-                processed_property = self.__process_type(property_type, meta_property)
-                properties[property_name] = processed_property
-                properties[property_name]["name"] = mds.to_snake_case(property_name)
+                if property_type and self.__config.is_param_supported(property_name):
+                    processed_property = self.__process_type(property_type, meta_property)
+                    properties[property_name] = processed_property
+                    properties[property_name]["name"] = mds.to_snake_case(property_name)
 
         return properties
     
@@ -140,19 +140,20 @@ class QtMetadataAdapter(MetadataAdapter):
             value = {}
             
             complex_obj = q_meta_property.read(self._obj)
-            if complex_obj:
-                for attribute, type in attributes.items():
+            if complex_obj != None:
+                for attribute, attr_type in attributes.items():
                     method = getattr(complex_obj, attribute)
                     default = method() if callable(method) else method
-                    value[attribute] = {"type":type.__name__, "default":default}
+                    value[attribute] = {"type":attr_type.__name__, "default":default}
                     
-                    if type in self.__config.enum_implemented:
+                    if attr_type in self.__config.enum_implemented:
                         
                         default = default.name
 
                         value[attribute]["type"] = "enum"
+                        value[attribute]["namespace"] = [attr_type.__module__, *attr_type.__qualname__.split('.')]
                         value[attribute]["default"] = default
-                        value[attribute]["options"] = list(type.__members__)
+                        value[attribute]["options"] = list(attr_type.__members__)
 
 
                 data["value"] = value
@@ -162,20 +163,24 @@ class QtMetadataAdapter(MetadataAdapter):
     def __process_enum_type(self, q_meta_property:QMetaProperty, property_type:type) -> dict[str,Any]:
         type_name = "enum"
         options = list(property_type.__members__)
+        namespace = self.__extract_namespace(q_meta_property)
 
         if not self._is_abstract:
             enum = q_meta_property.read(self._obj)
             default = enum.name
-            return {"type": type_name, "default": default, "options": options}
+            return {"type": type_name, "default": default, "options": options, "namespace": namespace}
         else:
-            return {"type": type_name, "options": options}
+            return {"type": type_name, "options": options, "namespace": namespace}
         
     def __process_flag_type(self, q_meta_property:QMetaProperty, property_type:type) -> dict[str,Any]:
         type_name = "flag"
+        
 
         options = {"exclusive":{}, "non_exclusive":[]}
         mask = {}
         value_to_filter = {}
+
+        namespace = self.__extract_namespace(q_meta_property)
 
         for key, value in property_type._member_map_.items():
             if "Mask" in key:
@@ -211,10 +216,25 @@ class QtMetadataAdapter(MetadataAdapter):
                         if value in collection:
                             default["exclusive"][category] = value
 
-            return {"type": type_name, "default": default, "options": options}
+            return {"type": type_name, "default": default, "options": options, "namespace":namespace}
         else:
-            return {"type": type_name, "options": options}
+            return {"type": type_name, "options": options, "namespace":namespace}
 
+    
+    def __extract_namespace(self, q_meta_property:QMetaProperty) -> list[str]:
+        namespace = []
+
+        module = q_meta_property.enumerator().__module__
+        scope = q_meta_property.enumerator().scope()
+        name = q_meta_property.enumerator().enum_name()
+
+        namespace.append(module)
+        if scope != name:
+            namespace.append(scope)
+        namespace.append(name)
+
+        return namespace
+    
     def __extract_methods(self, recursive:bool = True) -> dict[str,Any]:
         offset = 0 if recursive else self._meta.method_offset()
         methods = {"signal":{}, "slot":{}}

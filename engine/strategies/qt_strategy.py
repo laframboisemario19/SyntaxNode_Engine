@@ -36,20 +36,25 @@ class QtStrategy(LibraryStrategy):
     @property
     def language(self):
         return self._language
+    
+    @property
+    def metadata(self):
+        if self.__all_meta_objects == None:
+            self.update_meta_objects()
+        return self.__all_meta_objects
 
     def get_meta_objects(self):
         if self.__all_meta_objects == None:
             self.update_meta_objects()
 
-        serialized_dict = mds.restructure_dict(self.__all_meta_objects)
+        serialized_dict = mdo.organize_dict(self.__all_meta_objects, "direct_parent")
+        serialized_dict = mds.restructure_dict(serialized_dict)
         self.__create_data_file(serialized_dict, "./data/all_meta_objects.json")
         return serialized_dict
     
     def update_meta_objects(self):
-        meta_objects = {}
-        self.__generate_meta_objects(meta_objects)
-
-        self.__all_meta_objects = mdo.organize_dict(meta_objects, "direct_parent")
+        self.__all_meta_objects = {}
+        self.__generate_meta_objects(self.__all_meta_objects)
 
         return self.__all_meta_objects  
 

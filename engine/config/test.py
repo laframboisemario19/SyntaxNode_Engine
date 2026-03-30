@@ -31,7 +31,7 @@ class TestConfig():
         self.__enum_implemented = (QSizePolicy.Policy, Qt.FocusPolicy, Qt.ContextMenuPolicy, Qt.LayoutDirection, QFrame.Shape, 
                                    QFrame.Shadow, Qt.TextFormat, QLayout.SizeConstraint)
         self.__flags_implemented = (Qt.AlignmentFlag, Qt.InputMethodHint, Qt.TextInteractionFlag)
-        
+
         Qt.AlignmentFlag._value2member_map_
 
         self.__params_implemented = ("enabled", "geometry", "pos", "frame_size", "size", "alignment", "object_name",
