@@ -1,5 +1,4 @@
 import ast
-import json
 from .ast_builder import ASTBuilder
 from typing import Any
 
@@ -14,7 +13,6 @@ class QtASTBuilder(ASTBuilder):
         self._primitive_type = ["int", "str", "bool", "float"]
         self._structure_type = {"list" : ast.List, "tuple": ast.Tuple, "dict": ast.Dict, "set": ast.Set}
         
-
     @property
     def tree(self):
         return self._tree
@@ -52,78 +50,43 @@ class QtASTBuilder(ASTBuilder):
             self._build_function(node.body, data_dict[node_id]["function"])
 
     def build_main(self, data_dict):
-        main_node = ast.FunctionDef(name="main", 
-                                    args=ast.arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[]),
-                                    body=[],
-                                    decorator_list=[],
-                                    type_params=[])
+        # Création de la fonction main
+        args = ast.arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[])
+        main_node = ast.FunctionDef(name="main", args=args, body=[], decorator_list=[], type_params=[])
         self._tree.body.append(main_node)
 
+        # Définition de la fonction main
         body = main_node.body
-        body.append(ast.Assign(targets=[ast.Name(id="app",
-                                                ctx=ast.Store())],
-                                value=ast.Call(func=ast.Name(id="QApplication",
-                                                             ctx=ast.Load()),
-                                                args=[ast.Attribute(value=ast.Name(id="sys",
-                                                                                   ctx=ast.Load()),
-                                                                    attr='argv',
-                                                                    ctx=ast.Load())],
-                                                keywords=[])))
-        body.append(ast.Assign(targets=[ast.Name(id="w",
-                                                ctx=ast.Store())],
-                                value=ast.Call(func=ast.Name(id=data_dict[self._first_root_id]["type"],
-                                                             ctx=ast.Load()),
-                                                args=[],
-                                                keywords=[])))
-        body.append(ast.Expr(
-            value=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id="w", ctx=ast.Load()),
-                    attr="show",
-                    ctx=ast.Load()
-                ),
-                args=[],
-                keywords=[]
-            )
-        ))
-        body.append(ast.Expr(
-            value=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id="sys", ctx=ast.Load()),
-                    attr="exit",
-                    ctx=ast.Load()
-                ),
-                args=[
-                    ast.Call(
-                        func=ast.Attribute(
-                            value=ast.Name(id="app", ctx=ast.Load()),
-                            attr="exec",
-                            ctx=ast.Load()
-                        ),
-                        args=[],
-                        keywords=[]
-                    )
-                ],
-                keywords=[]
-            )
-        ))
-        if_main_node = ast.If(
-            test=ast.Compare(
-                left=ast.Name(id="__name__", ctx=ast.Load()),
-                ops=[ast.Eq()],
-                comparators=[ast.Constant(value="__main__")]
-            ),
-            body=[
-                ast.Expr(
-                    value=ast.Call(
-                        func=ast.Name(id="main", ctx=ast.Load()),
-                        args=[],
-                        keywords=[]
-                    )
-                )
-            ],
-            orelse=[]
-        )
+
+        ## app = QApplication(sys.argv)
+        call_func = ast.Name(id="QApplication", ctx=ast.Load())
+        call_args = [ast.Attribute(value=ast.Name(id="sys", ctx=ast.Load()), attr='argv', ctx=ast.Load())]
+
+        assign_targets = [ast.Name(id="app", ctx=ast.Store())]
+        assign_value = ast.Call(func=call_func, args=call_args, keywords=[])
+
+        body.append(ast.Assign(targets=assign_targets, value= assign_value))
+
+        ## w = MyApp()
+        assign_targets = [ast.Name(id="w", ctx=ast.Store())]
+        assign_value = ast.Call(func=ast.Name(id=data_dict[self._first_root_id]["type"], ctx=ast.Load()), args=[], keywords=[])
+        body.append(ast.Assign(targets=assign_targets, value=assign_value))
+
+        ## w.show()
+        expr_value = ast.Call(func=ast.Attribute(value=ast.Name(id="w", ctx=ast.Load()), attr="show", ctx=ast.Load()), args=[], keywords=[])
+        body.append(ast.Expr(value=expr_value, args=[], keywords=[]))
+
+        ## sys.exit(app.exec())
+
+        call_func = ast.Attribute(value=ast.Name(id="sys", ctx=ast.Load()), attr="exit", ctx=ast.Load())
+        call_args = [ast.Call(func=ast.Attribute(value=ast.Name(id="app", ctx=ast.Load()), attr="exec", ctx=ast.Load()), args=[], keywords=[])]
+        body.append(ast.Expr(value=ast.Call(func=call_func, args= call_args, keywords=[])))
+
+        # Section if __name__ == "__main__"
+        if_test = ast.Compare(left=ast.Name(id="__name__", ctx=ast.Load()), ops=[ast.Eq()], comparators=[ast.Constant(value="__main__")])
+        if_body = [ast.Expr(value=ast.Call(func=ast.Name(id="main", ctx=ast.Load()), args=[], keywords=[]))]
+
+        if_main_node = ast.If(test=if_test, body=if_body, orelse=[])
         self._tree.body.append(if_main_node)
                                                 
     def _build_class_node(self, root_list, data_dict):
@@ -159,8 +122,8 @@ class QtASTBuilder(ASTBuilder):
         body.append(self._build_super_init_node())
         self._build_init_variable(class_node_id, body, data_dict)
         self._build_properties(body, data_dict[class_node_id]["properties"], ast.Name(id="self", ctx=ast.Load()), data_dict)
-        self._build_links(class_node_id, body, data, data_dict)
         self._build_hierarchy(class_node_id, data_dict[class_node_id], body, data, data_dict)
+        self._build_links(class_node_id, body, data, data_dict)
         pass
 
     def _build_super_init_node(self) -> ast.Expr:
@@ -192,6 +155,9 @@ class QtASTBuilder(ASTBuilder):
 
             var_value = self._process_variable_value(var_data, data_dict)
 
+            if not var_value:
+                continue
+
             assign_node = ast.Assign(targets=var_target, value=var_value)
 
 
@@ -213,7 +179,7 @@ class QtASTBuilder(ASTBuilder):
         if var["type"] in self._primitive_type:
             return ast.Constant(value = var["value"])
         
-        elif var["type"] == "id":
+        elif var["type"] == "id" and var["value"] in data_dict:
             call_func = ast.Name(id=data_dict[var["value"]]["type"], ctx=ast.Load())
             return ast.Call(func=call_func, args=[], keywords=[])
 
@@ -240,7 +206,6 @@ class QtASTBuilder(ASTBuilder):
         elif var["type"] == "expression":
             return ast.parse(var["value"]).body[0].value
         
-
     def _add_static_import(self, import_buffers):
         import_buffers["system"].add("sys")
         import_buffers["qt"]["PySide6.QtWidgets"] = set(("QApplication",))
@@ -423,7 +388,6 @@ class QtASTBuilder(ASTBuilder):
             self._generate_qt_add_method(parent_id, child, body, data_dict)
             self._build_hierarchy(child, root_node, body, data, data_dict)
 
-
     def _generate_qt_add_method(self, parent_id, child_id, body, data_dict):
         child_category = data_dict[child_id].get("category", "widget") 
         parent_target_name = data_dict[parent_id]["name"]
@@ -433,7 +397,10 @@ class QtASTBuilder(ASTBuilder):
             method_name = "set_layout"
             parent_ast = ast.Name(id="self", ctx=ast.Load())
         else:
-            method_name = "add_widget" if child_category == "widget" else "addLayout"
+            if data_dict[parent_id]["category"] == "widget":
+                method_name = "set_layout"
+            else:
+                method_name = "add_widget" if child_category == "widget" else "add_layout"
             if parent_id in self._root_variable:
                 parent_ast = ast.Attribute(value=ast.Name(id="self", ctx=ast.Load()), attr=parent_target_name, ctx=ast.Load())
             else:

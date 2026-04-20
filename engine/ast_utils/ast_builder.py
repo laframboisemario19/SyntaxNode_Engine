@@ -32,6 +32,10 @@ class ASTBuilder(ABC):
     def build_main(self, data_dict):
         pass
 
+    @abstractmethod
+    def _find_root(self, data):
+        pass
+
     def print_tree(self):
         print(ast.dump(self._tree, indent=4))
 

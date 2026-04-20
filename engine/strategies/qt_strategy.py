@@ -3,18 +3,25 @@ import sys
 import PySide6
 from __feature__ import snake_case, true_property # type: ignore[import-not-found]
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import Qt, QByteArray, QBuffer, QIODevice
+from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtGui import QImage, QPixmap
 
 from shibokensupport import feature # type: ignore[import-not-found]
 feature.set_selection(feature.snake_case | feature.true_property)
 assert 'snake_case' in feature.info() and 'true_property' in feature.info()
 
 import json
+from typing import Self
+import ast
+from io import BytesIO
+import os
 
-from .base import LibraryStrategy
+from .base import LibraryStrategy, ImageGeneratorStrategy
 from ..config import BaseConfig, TestConfig
 from ..adapters import QtMetadataAdapter
 from ..utils import MetadataOrganizer as mdo, MetadataSerializer as mds
+
 
 class QtStrategy(LibraryStrategy):
     def __init__(self, config : BaseConfig = TestConfig):
@@ -59,13 +66,93 @@ class QtStrategy(LibraryStrategy):
         return self.__all_meta_objects  
 
     def __generate_meta_objects(self, object_dict):
+        self.__app = QApplication.instance()
+
         if not self.__app:
-            self.__app = QApplication()
+            self.__app = QApplication(["-platform", "offscreen"])
 
         for cls in self.__config.objects_implemented:
             meta = QtMetadataAdapter(cls, self.__config, recursive = True)
             object_dict[meta.class_name] = meta.to_dict()
     
     def __create_data_file(self, object_dict, path):
-        with open(path, "w", encoding="utf-8") as file:
-            json.dump(object_dict, file, indent=4, sort_keys=False)
+        dossier = os.path.dirname(path)
+        if dossier and os.path.exists(dossier):
+            with open(path, "w", encoding="utf-8") as file:
+                json.dump(object_dict, file, indent=4, sort_keys=False)
+
+class QtOffScreenGenerator(ImageGeneratorStrategy):
+    def __init__(self: Self, output_format: str = "PNG"):
+        self._name: str = "qt"
+        self._output_format:str
+        self.output_format = output_format
+
+        self._app = QApplication.instance()
+        if not self._app:
+            self._app = QApplication(["-platform", "offscreen"])
+
+    @property
+    def name(self: Self) -> str:
+        return self._name
+
+    @property
+    def output_format(self:Self) -> str:
+        return self._output_format
+    
+    @output_format.setter
+    def output_format(self:Self, output_format:str):
+        if not isinstance(output_format, str):
+            raise TypeError("output_format doit être de type str.")
+        
+        self._output_format = output_format
+
+    def generate_preview(self:Self, ast_root: ast.Module) -> BytesIO:
+        GeneratedAppClass = self._compile_ast(ast_root)
+        
+        widget = self._generate_main_widget(GeneratedAppClass)
+        target_w = widget.width if widget.width > 0 else 200
+        target_h = widget.height if widget.height > 0 else 200
+
+        pixmap = self._create_pixmap(target_w, target_h)
+        
+        widget.render(pixmap)
+        image = pixmap.to_image()
+        
+        return self._convert_to_buffer(image)
+    
+    def _compile_ast(self:Self, ast_root: ast.Module) -> type[QWidget]:
+        compiled_code = compile(ast_root, filename="<syntaxnode_ast>", mode="exec")
+        exec_env = globals().copy()
+        exec(compiled_code, exec_env)
+        
+        if 'MyApp' not in exec_env:
+            raise ValueError("La classe MyApp n'a pas été trouvée dans l'AST.")
+            
+        return exec_env['MyApp']
+    
+    def _generate_main_widget(self: Self, main_widget:type[QWidget]) -> QWidget:
+        widget = main_widget()
+
+        widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen)
+        widget.show()
+        
+        widget.adjust_size()
+
+        return widget
+    
+    def _create_pixmap(self: Self, width:int, height:int):
+        pixmap = QPixmap(width, height)
+        pixmap.fill(Qt.GlobalColor.white)
+
+        self._app.process_events()
+
+        return pixmap
+    
+    def _convert_to_buffer(self, image: QImage) -> BytesIO:
+        byte_array = QByteArray()
+        qt_buffer = QBuffer(byte_array)
+        qt_buffer.open(QIODevice.WriteOnly)
+        image.save(qt_buffer, self.output_format)
+        
+        return BytesIO(byte_array.data())
+        

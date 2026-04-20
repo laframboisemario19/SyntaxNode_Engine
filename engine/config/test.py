@@ -14,7 +14,9 @@ assert 'snake_case' in feature.info() and 'true_property' in feature.info()
 
 import json as json
 
-class TestConfig():
+from .base import BaseConfig
+
+class TestConfig(BaseConfig):
     def __init__(self):
         self.__objects_implemented = (QObject, QWidget, QAbstractButton, QPushButton, QLayout, QBoxLayout, QVBoxLayout, QFrame, 
                                       QLabel)

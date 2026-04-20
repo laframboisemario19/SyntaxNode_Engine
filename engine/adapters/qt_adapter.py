@@ -163,7 +163,7 @@ class QtMetadataAdapter(MetadataAdapter):
     def __process_enum_type(self, q_meta_property:QMetaProperty, property_type:type) -> dict[str,Any]:
         type_name = "enum"
         options = list(property_type.__members__)
-        namespace = self.__extract_namespace(q_meta_property)
+        namespace = self.__extract_namespace(q_meta_property, property_type)
 
         if not self._is_abstract:
             enum = q_meta_property.read(self._obj)
@@ -180,7 +180,7 @@ class QtMetadataAdapter(MetadataAdapter):
         mask = {}
         value_to_filter = {}
 
-        namespace = self.__extract_namespace(q_meta_property)
+        namespace = self.__extract_namespace(q_meta_property, property_type)
 
         for key, value in property_type._member_map_.items():
             if "Mask" in key:
@@ -220,11 +220,10 @@ class QtMetadataAdapter(MetadataAdapter):
         else:
             return {"type": type_name, "options": options, "namespace":namespace}
 
-    
-    def __extract_namespace(self, q_meta_property:QMetaProperty) -> list[str]:
+    def __extract_namespace(self, q_meta_property:QMetaProperty, property_type:type) -> list[str]:
         namespace = []
 
-        module = q_meta_property.enumerator().__module__
+        module = property_type.__module__
         scope = q_meta_property.enumerator().scope()
         name = q_meta_property.enumerator().enum_name()
 
@@ -240,7 +239,7 @@ class QtMetadataAdapter(MetadataAdapter):
         methods = {"signal":{}, "slot":{}}
         for idx in range(offset, self._meta.method_count()):
             meta_method = self._meta.method(idx)
-            method_name = mds.to_snake_case(meta_method.name().data().decode())
+            method_name = meta_method.name().data().decode()
             method_type = meta_method.method_type()
             parameters = []
             parameters_valid = True
@@ -254,12 +253,13 @@ class QtMetadataAdapter(MetadataAdapter):
                 method_type = "signal"
             elif method_type == QMetaMethod.MethodType.Slot:
                 method_type = "slot"
+                method_name = mds.to_snake_case(method_name)
             else:
                 continue
 
             if method_name not in methods[method_type]:
                 methods[method_type][method_name] = {}
-                methods[method_type][method_name]["name"] = mds.to_snake_case(method_name)
+                methods[method_type][method_name]["name"] = method_name
                 methods[method_type][method_name]["parameter"] = parameters
             
         return methods

@@ -5,7 +5,7 @@ import copy
 class MetadataOrganizer:
     
     @staticmethod
-    def organize_dict(dict_to_organize: dict[Any, Any], key_word) -> dict[Any, Any]:
+    def organize_dict(dict_to_organize: dict[Any, Any], key_word:str) -> dict[Any, Any]:
         working_data = copy.deepcopy(dict_to_organize)
         root_objects = []
 
