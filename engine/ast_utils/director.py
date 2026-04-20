@@ -43,15 +43,54 @@ class ASTDirector():
         root_variables = data_dict[root_id]["variable"]
         root_properties = data_dict[root_id]["properties"]
 
-        comp = self._add_root_widget(root_variables, root_properties, target_id, "app_widget")
-        new_data_dict[comp["id"]] = comp
-        new_components.append(comp)
+        # if data_dict[target_id]["category"] == "widget":
+        #     layout = self._create_layout(target_id)
+        #     target_id = layout["id"]
+        #     new_data_dict[target_id] = layout
+        #     # new_components.append(layout)
+        #     data_dict[target_id] = layout 
+
+        if data_dict[target_id]["category"] == "layout":
+            comp = self._add_root_widget(root_variables, root_properties, target_id, "app_widget")
+            new_data_dict[comp["id"]] = comp
+            new_components.append(comp)
+        else:
+            data_dict["app_widget"] = data_dict[target_id].copy()
+            data_dict["app_widget"]["id"] = "app_widget"
+            data_dict["app_widget"]["type"] = "MyApp"
+            data_dict["app_widget"]["category"] = "widget"
+            data_dict["app_widget"]["inheritance"].append({"type":data_dict[target_id]["type"], "module":data_dict[target_id]["module"]})
+            data_dict.pop(target_id)
+            data_dict["app_widget"].pop("module")
+            target_id = "app_widget"
 
         self._add_components(target_id, data_dict, new_components, new_data_dict)
         
         new_data = {"components": new_components, "links": []}
         
         return new_data, new_data_dict
+    
+    # def _create_layout(self:Self, target_id):
+    #     variables = []
+    #     children = [target_id]
+    #     properties = []
+    #     inheritance = [{
+    #                     "type": "QWidget",
+    #                     "module": "PySide6.QtWidgets"
+    #                 }]
+
+    #     layout = {"id" : "my_layout",
+    #                    "type" : "MyApp",
+    #                    "category" : "core",
+    #                    "name": "app",
+    #                    "variable": variables,
+    #                    "inheritance": inheritance,
+    #                    "child": children,
+    #                    "properties": properties,
+    #                    "function" : []
+    #                    }
+        
+    #     return layout
     
     def _find_parent(self:Self):
         raise Exception("pas encore implémenté.")
