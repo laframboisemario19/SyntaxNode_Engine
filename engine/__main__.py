@@ -28,7 +28,7 @@ def main():
         out_file.write(code_files.getvalue())
 
     ## Obtenir le buffer contenant l'image demandée
-    bitmap_buffer = engine.generate_bitmap(data, "3")
+    bitmap_buffer = engine.generate_bitmap(data, "1")
     debug(bitmap_buffer)
 
 def debug(bitmap_buffer:BytesIO):

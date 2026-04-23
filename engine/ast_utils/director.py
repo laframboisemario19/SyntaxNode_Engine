@@ -23,8 +23,9 @@ class ASTDirector():
         root_list = self._builder._find_root(data["components"])
 
         if target_id:
-            data, data_dict = self._format_partial_data(target_id, data_dict, root_list)
-            root_list = self._builder._find_root(data["components"])
+            self._rearrange_data(target_id, data_dict, data["components"], root_list[0])
+            self._builder._find_root(data["components"])
+            data["links"] = []
 
         self._builder.build_import(data["components"])
 
@@ -35,65 +36,124 @@ class ASTDirector():
 
         return self._builder.get_ast()
     
-    def _format_partial_data(self:Self, target_id, data_dict, root_list) -> dict[str, Any]:
-        new_components = []
-        new_data_dict = {}
+    def _rearrange_data(self:Self, target_id, data_dict, components, root_id) -> None:
+        parent_id = self._find_parent(target_id, components)
+        parent = data_dict.get(parent_id, None)
+        if parent:
+            parent_category = parent["category"]
 
-        root_id = root_list[0] if len(root_list) == 1 else self._find_parent()
-        root_variables = data_dict[root_id]["variable"]
-        root_properties = data_dict[root_id]["properties"]
+        grand_parent = self._find_parent(parent_id, components)
 
-        # if data_dict[target_id]["category"] == "widget":
-        #     layout = self._create_layout(target_id)
-        #     target_id = layout["id"]
-        #     new_data_dict[target_id] = layout
-        #     # new_components.append(layout)
-        #     data_dict[target_id] = layout 
+        target = data_dict[target_id]
+        target_category = target["category"]
 
-        if data_dict[target_id]["category"] == "layout":
-            comp = self._add_root_widget(root_variables, root_properties, target_id, "app_widget")
-            new_data_dict[comp["id"]] = comp
-            new_components.append(comp)
-        else:
-            data_dict["app_widget"] = data_dict[target_id].copy()
-            data_dict["app_widget"]["id"] = "app_widget"
-            data_dict["app_widget"]["type"] = "MyApp"
-            data_dict["app_widget"]["category"] = "widget"
-            data_dict["app_widget"]["inheritance"].append({"type":data_dict[target_id]["type"], "module":data_dict[target_id]["module"]})
-            data_dict.pop(target_id)
-            data_dict["app_widget"].pop("module")
-            target_id = "app_widget"
+        root = data_dict[root_id]
+        root["type"] = "MyApp"
 
-        self._add_components(target_id, data_dict, new_components, new_data_dict)
+        if target_category == "layout" and parent_category == "widget":
+            self._replace_parent_widget(parent, grand_parent, target, components, data_dict, root)
+        elif target_category == "layout" and parent_category == "layout":
+            self._add_parent_widget(parent, grand_parent, target, components, data_dict, root)
+        elif target_category == "widget":
+            self._rearrange_target_widget(target, parent, components, data_dict, root)
+
+        pass
+
+    def _replace_parent_widget(self:Self, parent, grand_parent, target, components, data_dict, root):
+        inheritance = []
+        w_type = "QWidget"
+        if parent == root:
+            inheritance = [{"type": "QWidget",
+                            "module": "PySide6.QtWidgets"
+                            }]
+            w_type = "MyApp"
+                    
+        variable = parent["variable"]
+        properties = parent["properties"]
+        child = parent["child"]
+
+        widget = {"id" : "my_widget",
+                "type" : w_type,
+                "category" : "widget",
+                "name": "my_widget",
+                "variable": variable,
+                "inheritance": inheritance,
+                "child": child,
+                "properties": properties,
+                "function" : []
+                }
         
-        new_data = {"components": new_components, "links": []}
-        
-        return new_data, new_data_dict
+        components.append(widget)
+        components.remove(parent)
+        data_dict["my_widget"] = widget
+        data_dict.pop(parent["id"])
+
+        if grand_parent:
+            data_dict[grand_parent]["child"].remove(parent["id"])
+            data_dict[grand_parent]["child"].append(widget["id"])
+
+        id_in_variable = [var["value"]["value"] for var in root["variable"]]
+        if target["id"] not in id_in_variable and parent != root:
+            variable = {
+                "id": "my_widget",
+                "name": "my_widget",
+                "value": { "type": "id", "value": "my_widget" },
+                "scope": "public",
+            }
+            root["variable"].append(variable)
     
-    # def _create_layout(self:Self, target_id):
-    #     variables = []
-    #     children = [target_id]
-    #     properties = []
-    #     inheritance = [{
-    #                     "type": "QWidget",
-    #                     "module": "PySide6.QtWidgets"
-    #                 }]
-
-    #     layout = {"id" : "my_layout",
-    #                    "type" : "MyApp",
-    #                    "category" : "core",
-    #                    "name": "app",
-    #                    "variable": variables,
-    #                    "inheritance": inheritance,
-    #                    "child": children,
-    #                    "properties": properties,
-    #                    "function" : []
-    #                    }
+    def _add_parent_widget(self:Self, parent, target, components, data_dict, root):
+        widget = {"id" : "my_widget",
+                "type" : "QWidget",
+                "category" : "widget",
+                "name": "my_widget",
+                "variable": [],
+                "inheritance": [],
+                "child": [target["id"]],
+                "properties": [],
+                "function" : []
+                }
         
-    #     return layout
+        parent["child"].remove(target["id"])
+        parent["child"].append(widget["id"])
+        components.append(widget)
+        data_dict["my_widget"] = widget
+
+
+        id_in_variable = [var["id"] for var in root["variable"]]
+        if target["id"] not in id_in_variable:
+            variable = {
+                "id": "my_widget",
+                "name": "my_widget",
+                "value": { "type": "id", "value": "my_widget" },
+                "scope": "public",
+            }
+            root["variable"].append(variable)
+
+    def _rearrange_target_widget(self:Self, target, parent, components, data_dict, root):
+        if target["id"] == root["id"]:
+            return
+
+        target["name"] = "my_widget"
+
+        for var in root["variable"]:
+            if target["id"] == var["value"]["value"]:
+                var["name"] = "my_widget"
+                return
+        variable = {
+                "id": "my_widget",
+                "name": "my_widget",
+                "value": { "type": "id", "value": target["id"] },
+                "scope": "public",
+            }
+        root["variable"].append(variable)
     
-    def _find_parent(self:Self):
-        raise Exception("pas encore implémenté.")
+    def _find_parent(self:Self, target_id:str, data) -> str:
+        for c in data:
+            for child_id in c["child"]:
+                if child_id == target_id:
+                    return c["id"]
+        
 
     def _add_root_widget(self: Self, root_variables, root_properties, child_id:str, widget_id:str):
         variables = root_variables

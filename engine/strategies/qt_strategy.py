@@ -109,13 +109,14 @@ class QtOffScreenGenerator(ImageGeneratorStrategy):
     def generate_preview(self:Self, ast_root: ast.Module) -> BytesIO:
         GeneratedAppClass = self._compile_ast(ast_root)
         
-        widget = self._generate_main_widget(GeneratedAppClass)
+        main_widget, widget = self._generate_main_widget(GeneratedAppClass)
         target_w = widget.width if widget.width > 0 else 200
         target_h = widget.height if widget.height > 0 else 200
 
-        pixmap = self._create_pixmap(target_w, target_h)
+        # pixmap = self._create_pixmap(target_w, target_h)
         
-        widget.render(pixmap)
+        # widget.render(pixmap)
+        pixmap = widget.grab()
         image = pixmap.to_image()
         
         return self._convert_to_buffer(image)
@@ -131,14 +132,18 @@ class QtOffScreenGenerator(ImageGeneratorStrategy):
         return exec_env['MyApp']
     
     def _generate_main_widget(self: Self, main_widget:type[QWidget]) -> QWidget:
-        widget = main_widget()
+        root_widget = main_widget()
+        if hasattr(root_widget, "my_widget"):
+            widget = root_widget.my_widget
+        else:
+            widget = root_widget
 
         widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen)
         widget.show()
         
         widget.adjust_size()
 
-        return widget
+        return root_widget, widget
     
     def _create_pixmap(self: Self, width:int, height:int):
         pixmap = QPixmap(width, height)
