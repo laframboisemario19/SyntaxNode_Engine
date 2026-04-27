@@ -1,7 +1,7 @@
 from typing import Self, Any
 
 from .base import LanguageStrategy, ImageGeneratorStrategy
-from ..ast_utils import BuilderFactory, ASTDirector
+from ..ast_utils import BuilderFactory, ASTDirector, ASTFlattener
 from ..generator import CodeGenerator
 
 class PythonStrategy(LanguageStrategy):
@@ -27,7 +27,12 @@ class PythonStrategy(LanguageStrategy):
         if library not in self._directors:
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
 
-        code = CodeGenerator.generate_code(self._directors[library].make(data, metadata))
+        ast = self._directors[library].make(data, metadata)
+        code = CodeGenerator.generate_code(ast)
+        
+        flattener = ASTFlattener()
+        flattener.flatten(ast)
+
         file = CodeGenerator.generate_file("main_application.py", code)
         zip_file = CodeGenerator.generate_zip_files((file,))
 

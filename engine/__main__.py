@@ -14,7 +14,7 @@ def main():
     ## Obtenir les metadata
     meta_objects = engine.get_meta_objects()
 
-    path = "./core/data/projet_test4.json"
+    path = "./core/data/projet_test1.json"
     data = None
     with open(path, encoding="utf-8") as file:
         data = json.load(file)
@@ -28,8 +28,8 @@ def main():
         out_file.write(code_files.getvalue())
 
     ## Obtenir le buffer contenant l'image demandée
-    bitmap_buffer = engine.generate_bitmap(data, "6")
-    debug(bitmap_buffer)
+    # bitmap_buffer = engine.generate_bitmap(data, "12")
+    # debug(bitmap_buffer)
 
 def debug(bitmap_buffer:BytesIO):
     bitmap_buffer.seek(0)
