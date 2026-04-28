@@ -1,59 +1,38 @@
-from typing import Self, Any
+from typing import Self, Any, List
 import ast
-from ast import NodeVisitor
 
 class ASTFlattener():
-    def __init__(self:Self):
-        pass
-
-    def flatten(self:Self, ast:ast.Module):
-        visitor = FlattenerVisitor()
-        visitor.visit(ast)
-        flatten_tree = visitor.flatten_tree
-        pass
-
-
-class FlattenerVisitor(NodeVisitor):
-    def __init__(self:Self):
-        super().__init__()
-        self._count = 0
+    def __init__(self:Self) -> None:
         self.flatten_tree = []
-        self._current_parent_id = None
 
-    def generic_visit(self:Self, node:Any):
-        super().generic_visit(node)
+    def flatten(self:Self, tree:ast.AST) -> List[List[Any]]:
+        self.flatten_tree = []
 
-    def visit_Module(self:Self, node:Any):
-        self.flatten_tree.append(["AST.Module", None, [], ""])
-        for n in node.body:
-            self._current_parent_id = 0
-            self.visit(n)
+        self._traverse(tree, None, "Module")
+        return self.flatten_tree
 
-    def visit_Import(self:Self, node:Any):
-        self._add_node("AST.Import", has_child=True)
-        self._add_node("AST.names", has_child=True)
-        for name in node.names:
-            self._add_node("AST.alias", name.name, has_child=False)
+    def _add_node(self:Self, type:str, parent_id:int | None, value:str = "") -> int:
+        node_id = len(self.flatten_tree)
+        self.flatten_tree.append([type, parent_id, [], value])
+        
+        if parent_id is not None:
+            self.flatten_tree[parent_id][2].append(node_id)
 
-    def visit_ImportFrom(self:Self, node:Any):
-        self._add_node("AST.Import", has_child=True)
-        self._add_node("AST.module", node.module, has_child=False)
-        self._add_node("AST.names", has_child=True)
-        for name in node.names:
-            self._add_node("AST.alias", name.name, has_child=False)
+        return node_id
 
-    def visit_ClassDef(self:Self, node:Any):
-        self_id = len(self.flatten_tree)
-        self._add_node("AST.ClassDef", value=node.name, has_child=True)
-        self._add_node("AST.base", has_child=True)
-        for b in node.bases:
-            self.visit(b)
+    def _traverse(self:Self, obj:ast.AST | List[Any], parent_id: int | None, obj_type: str) -> None:
+        if isinstance(obj, ast.AST):
+            node_type = f"AST_{obj.__class__.__name__}"
+            current_id = self._add_node(node_type, parent_id)
 
-    def visit_Name(self:Self, node:Any):
-        self._add_node("AST.Name", node.id, has_child=False)
+            for fieldname, value in ast.iter_fields(obj):
+                self._traverse(value, current_id, fieldname)
+        
+        elif isinstance(obj, list):
+            if obj:
+                list_id = self._add_node(f"AST_{obj_type}", parent_id)
+                for item in obj:
+                    self._traverse(item, list_id, obj_type)
 
-    def _add_node(self:Self, type:str, value:str= "", has_child:bool=False):
-        self.flatten_tree.append([type, self._current_parent_id, [], value])
-        self.flatten_tree[self._current_parent_id][2].append(len(self.flatten_tree) - 1)
-        if has_child:
-            self._current_parent_id = len(self.flatten_tree) - 1
+        elif obj is not None or (obj is None and obj_type == "value"):
+            self._add_node(f"AST_{obj_type}", parent_id, str(obj))
