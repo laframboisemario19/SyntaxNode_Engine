@@ -324,19 +324,20 @@ class QtASTBuilder(ASTBuilder):
     
     def _build_function(self, body, functions):
         for func in functions:
-            arguments = ast.arguments(posonlyargs=[], args=[ast.arg(arg=p) for p in func["params"]], kwonlyargs=[], kw_defaults=[], defaults=[])
-            code = "\n".join(func["code"])
+            if not func.get("is_intern", True):
+                arguments = ast.arguments(posonlyargs=[], args=[ast.arg(arg=p) for p in func["params"]], kwonlyargs=[], kw_defaults=[], defaults=[])
+                code = "\n".join(func["code"])
 
-            func_body = ast.parse(code).body
-            if not func_body:
-                func_body = [ast.Pass()]
+                func_body = ast.parse(code).body
+                if not func_body:
+                    func_body = [ast.Pass()]
 
-            func_node = ast.FunctionDef(name = func["name"],
-                            args = arguments,
-                            body = func_body,
-                            decorator_list = [],
-                            type_params = [])
-            body.append(func_node)
+                func_node = ast.FunctionDef(name = func["name"],
+                                args = arguments,
+                                body = func_body,
+                                decorator_list = [],
+                                type_params = [])
+                body.append(func_node)
 
     def _build_links(self, root_id, body, data, data_dict):
         for link in data["links"]:
