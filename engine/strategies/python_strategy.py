@@ -29,9 +29,6 @@ class PythonStrategy(LanguageStrategy):
 
         ast = self._directors[library].make(data, metadata)
         code = CodeGenerator.generate_code(ast)
-        
-        flattener = ASTFlattener()
-        flattener.flatten(ast)
 
         file = CodeGenerator.generate_file("main_application.py", code)
         zip_file = CodeGenerator.generate_zip_files((file,))
