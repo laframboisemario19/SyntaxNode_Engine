@@ -391,6 +391,8 @@ class QtASTBuilder(ASTBuilder):
 
     def _generate_qt_add_method(self, parent_id, child_id, body, data_dict):
         child_category = data_dict[child_id].get("category", "widget") 
+        child_category = data_dict[child_id].get("inheritance", {})[0].get("type", "widget") if child_category == "custom" else child_category
+        
         parent_target_name = data_dict[parent_id]["name"]
         child_target_name = data_dict[child_id]["name"]
         
@@ -398,6 +400,9 @@ class QtASTBuilder(ASTBuilder):
             method_name = "set_layout"
             parent_ast = ast.Name(id="self", ctx=ast.Load())
         else:
+            parent_category = data_dict[parent_id].get("category", "widget") 
+            parent_category = data_dict[parent_id].get("inheritance", {})[0].get("type", "widget") if parent_category == "custom" else parent_category
+
             if data_dict[parent_id]["category"] == "widget":
                 method_name = "set_layout"
             else:

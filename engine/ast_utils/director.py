@@ -40,12 +40,15 @@ class ASTDirector():
         parent_id = self._find_parent(target_id, components)
         parent = data_dict.get(parent_id, None)
         if parent:
-            parent_category = parent["category"]
+            parent_category = parent["category"] 
+            parent_category = parent.get("inheritance", {})[0].get("type", "widget") if parent_category == "custom" else parent_category
+
 
         grand_parent = self._find_parent(parent_id, components)
 
         target = data_dict.get(target_id, {})
         target_category = target.get("category", None)
+        target_category = target.get("inheritance", {})[0].get("type", "widget") if target_category == "custom" else target_category
 
         root = data_dict[root_id]
         root["type"] = "MyApp"
