@@ -32,7 +32,7 @@ class ASTDirector():
         self._builder.build_class(data, data_dict)
         self._builder.build_main(data_dict)
         self._builder.fix_locations()
-        self._builder.print_tree()
+        # self._builder.print_tree()
 
         return self._builder.get_ast()
     
@@ -45,7 +45,7 @@ class ASTDirector():
         grand_parent = self._find_parent(parent_id, components)
 
         target = data_dict[target_id]
-        target_category = target["category"]
+        target_category = target.get("category", None)
 
         root = data_dict[root_id]
         root["type"] = "MyApp"

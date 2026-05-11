@@ -1,8 +1,9 @@
-from typing import Self, Any
+from typing import Self, Any, List, Dict
 
 from .base import LanguageStrategy, ImageGeneratorStrategy
 from ..ast_utils import BuilderFactory, ASTDirector, ASTFlattener
 from ..generator import CodeGenerator
+from ..static_analyser import PyTorchModel
 
 class PythonStrategy(LanguageStrategy):
     def __init__(self, config=None):
@@ -10,6 +11,7 @@ class PythonStrategy(LanguageStrategy):
         self._image_generator: ImageGeneratorStrategy = None
         self._available_lib = []
         self._directors: dict[str, ASTDirector] = {}
+        self._pytorch_model = PyTorchModel()
 
     @property
     def name(self):
@@ -47,3 +49,9 @@ class PythonStrategy(LanguageStrategy):
         tree = self._directors[library].make(data, metadata, target_id)
 
         return self._image_generator.generate_preview(tree)
+    
+    def train_ai(self:Self, library:str, data:List[Dict[str, Any]], metadata) -> None:
+        if library not in self._directors:
+            self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
+
+        ast = self._directors[library].make(data, metadata)

@@ -11,7 +11,7 @@ def main():
     engine.set_language("python")
     engine.set_lib("qt", ConfigType.DEFAULT)
 
-    ## Obtenir les metadata
+    # ## Obtenir les metadata
     meta_objects = engine.get_meta_objects()
 
     path = "./core/data/projet_test1.json"
@@ -27,9 +27,11 @@ def main():
     with open(output_path, "wb") as out_file:
         out_file.write(code_files.getvalue())
 
-    ## Obtenir le buffer contenant l'image demandée
-    # bitmap_buffer = engine.generate_bitmap(data, "12")
-    # debug(bitmap_buffer)
+    # Obtenir le buffer contenant l'image demandée
+    bitmap_buffer = engine.generate_bitmap(data, "12")
+    debug(bitmap_buffer)
+
+    # engine.train_ai(data)
 
 def debug(bitmap_buffer:BytesIO):
     bitmap_buffer.seek(0)

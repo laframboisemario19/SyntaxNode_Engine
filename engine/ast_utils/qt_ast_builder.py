@@ -297,7 +297,7 @@ class QtASTBuilder(ASTBuilder):
         assign_value = None
         left_op = None
         right_op = None
-        for v in flag_value.values():
+        for v in (flag_value["exclusive"].values() or flag_value["non_exclusive"]):
             left_op = assign_value
             right_op = self._build_property_value(property_namespace[2], property_namespace[1], v)
 

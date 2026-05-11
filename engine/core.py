@@ -222,6 +222,16 @@ class SyntaxNodeEngine():
 
         return self._current_lang_strategy.generate_bitmap(self.current_lib, strategy, data, metadata, target_id)
     
+    def train_ai(self:Self, data:List[Dict[str, Any]]) -> None:
+        if not self._current_lib_strategy:
+            raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
+        
+        metadata = self._current_lib_strategy.metadata
+        self._current_lang_strategy.train_ai(self.current_lib, data, metadata)
+
+    def predict(self:Self) -> None:
+        pass
+    
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
