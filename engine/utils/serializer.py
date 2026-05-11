@@ -24,7 +24,8 @@ class MetadataSerializer:
     @classmethod
     def sanitize_properties(cls, data: dict[str, Any], metadata: dict[str, Any]):
         for component in data:
-            comp_type = component["type"] if component.get("module") else component["inheritance"][0]["type"]
+            comp_type = component["type"]
+            comp_type = comp_type if component["category"] != "custom" else component["inheritance"][0]["type"]
             meta_properties = metadata[comp_type]["property"]
 
             cleaned_properties = []
