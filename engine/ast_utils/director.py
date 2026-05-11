@@ -44,7 +44,7 @@ class ASTDirector():
 
         grand_parent = self._find_parent(parent_id, components)
 
-        target = data_dict[target_id]
+        target = data_dict.get(target_id, {})
         target_category = target.get("category", None)
 
         root = data_dict[root_id]

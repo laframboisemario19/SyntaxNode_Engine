@@ -11,6 +11,7 @@ class PythonStrategy(LanguageStrategy):
         self._image_generator: ImageGeneratorStrategy = None
         self._available_lib = []
         self._directors: dict[str, ASTDirector] = {}
+        self._flattener = ASTFlattener()
         self._pytorch_model = PyTorchModel()
 
     @property
@@ -55,3 +56,5 @@ class PythonStrategy(LanguageStrategy):
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
 
         ast = self._directors[library].make(data, metadata)
+        flat_ast = self._flattener.flatten(ast)
+        self._pytorch_model.create_tensor(flat_ast)
