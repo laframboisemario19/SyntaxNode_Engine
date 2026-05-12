@@ -1,19 +1,47 @@
-from typing import Self, List, Any
+from typing import Self, List, Any, Tuple
 
-# import torch
+import torch
 
 class PyTorchModel():
-    def __init__(self:Self) -> None:
-        self._lexical = {}
+    def __init__(self:Self, data:Tuple[List[List[Any]]]) -> None:
+        self._lexical = {"Unknown": 0, "USER_str": 1, "USER_int":2, "USER_float":3, "USER_bool":4, "USER_none":5, "No_value":6}
+        self._device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
+        self.values = self.transform_data(data)
+
+        print(f"{self.__class__.__name__} initizalizing")
+        print(f"Using {self._device} device")
+
+    def reset(self:Self) -> None:
+        self._lexical = {"Unknown": 0, "USER_str": 1, "USER_int":2, "USER_float":3, "USER_bool":4, "USER_none":5, "No_value":6}
         self.values = None
 
-    def create_tensor(self:Self, data:List[List[Any]]):
-        self._update_lexical(data)
+    def transform_data(self:Self, data:Tuple[List[List[Any]]]) -> List[torch.Tensor]:
+        tensor_list = []
+        user_input = {None: "USER_none", "":"No_value", "str":"USER_str", "int":"USER_int", "float":"USER_float","bool":"USER_bool"}
+        for d in data:
+            main_tensor = torch.tensor([])
+            for node in d:
+                word, parent, children, value = node
 
-    def _update_lexical(self:Self, data:List[List[Any]]):
+                if word not in self._lexical:
+                    self._lexical[word] = len(self._lexical)
 
-        for row in data:
-            word = row[0]
-            if word not in self._lexical:
-                self._lexical[word] = len(self._lexical)
-        pass
+                if word == "AST_ImportFrom":
+                    names_id = children[1]
+                    for alias_id in d[names_id][2]:
+                        name_id = d[alias_id][2][0]
+                        value = d[name_id][3]
+                        if value not in self._lexical and value not in ("OBJ_snake_case", "OBJ_true_property"):
+                            self._lexical[value] = len(self._lexical)       
+
+                word, value = self._lexical.get(word, "Unknown"), self._lexical.get(value, value)
+
+                if value not in self._lexical:
+                    value = user_input.get(value, user_input.get(value.__class__.__name__, None))
+                    value = self._lexical[value]
+
+                tensor = torch.tensor([word, parent, value])
+                main_tensor = ([*main_tensor, tensor])
+            tensor_list.append(main_tensor)
+
+        return tensor_list

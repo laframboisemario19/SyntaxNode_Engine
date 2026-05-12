@@ -1,4 +1,4 @@
-from typing import Self, Any, List, Dict
+from typing import Self, Any, List, Dict, Tuple
 
 from .base import LanguageStrategy, ImageGeneratorStrategy
 from ..ast_utils import BuilderFactory, ASTDirector, ASTFlattener
@@ -12,7 +12,7 @@ class PythonStrategy(LanguageStrategy):
         self._available_lib = []
         self._directors: dict[str, ASTDirector] = {}
         self._flattener = ASTFlattener()
-        self._pytorch_model = PyTorchModel()
+        self._pytorch_model = None
 
     @property
     def name(self):
@@ -51,10 +51,17 @@ class PythonStrategy(LanguageStrategy):
 
         return self._image_generator.generate_preview(tree)
     
-    def train_ai(self:Self, library:str, data:List[Dict[str, Any]], metadata) -> None:
+    def train_ai(self:Self, library:str, data:Tuple[List[List[Any]]], metadata) -> None:
         if library not in self._directors:
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
 
-        ast = self._directors[library].make(data, metadata)
-        flat_ast = self._flattener.flatten(ast)
-        self._pytorch_model.create_tensor(flat_ast)
+        flat_ast_list = []
+        for d in data:
+            ast = self._directors[library].make(d, metadata)
+            flat_ast = self._flattener.flatten(ast)
+            flat_ast_list.append(flat_ast)
+        
+        if not self._pytorch_model:
+            self._pytorch_model = PyTorchModel(tuple(flat_ast_list))
+        else:
+            self._pytorch_model.transform_data(tuple(flat_ast_list))

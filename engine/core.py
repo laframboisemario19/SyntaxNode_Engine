@@ -6,7 +6,7 @@ pour gérer l'état et coordonner les stratégies liées aux langages de program
 et aux bibliothèques d'interface graphique.
 """
 
-from typing import Any, Self, Dict, List
+from typing import Any, Self, Dict, List, Tuple
 from io import BytesIO
 
 from .strategies import StrategyFactory, StrategyType, ConfigType
@@ -222,7 +222,7 @@ class SyntaxNodeEngine():
 
         return self._current_lang_strategy.generate_bitmap(self.current_lib, strategy, data, metadata, target_id)
     
-    def train_ai(self:Self, data:List[Dict[str, Any]]) -> None:
+    def train_ai(self:Self, data:Tuple[List[List[Any]]]) -> None:
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
         

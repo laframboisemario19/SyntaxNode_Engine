@@ -11,8 +11,9 @@ class ASTFlattener():
         self._traverse(tree, None, "Module")
         return self.flatten_tree
 
-    def _add_node(self:Self, type:str, parent_id:int | None, value:str = "") -> int:
+    def _add_node(self:Self, type:str, parent_id:int | None, value:str | int | float | bool= "") -> int:
         node_id = len(self.flatten_tree)
+        parent_id = parent_id if parent_id is not None else -1
         self.flatten_tree.append([type, parent_id, [], value])
         
         if parent_id is not None:
@@ -35,4 +36,4 @@ class ASTFlattener():
                     self._traverse(item, list_id, obj_type)
 
         elif obj is not None or (obj is None and obj_type == "value"):
-            self._add_node(f"AST_{obj_type}", parent_id, str(obj))
+            self._add_node(f"AST_{obj_type}", parent_id, obj)
