@@ -4,6 +4,7 @@ from .base import LanguageStrategy, ImageGeneratorStrategy
 from ..ast_utils import BuilderFactory, ASTDirector, ASTFlattener
 from ..generator import CodeGenerator
 from ..static_analyser import PyTorchModel
+from ..visitors import ImportFromExtractor
 
 class PythonStrategy(LanguageStrategy):
     def __init__(self, config=None):
@@ -55,9 +56,12 @@ class PythonStrategy(LanguageStrategy):
         if library not in self._directors:
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
 
+        extractor = ImportFromExtractor()
+
         flat_ast_list = []
         for d in data:
             ast = self._directors[library].make(d, metadata)
+            import_list = extractor.visit(ast)
             flat_ast = self._flattener.flatten(ast)
             flat_ast_list.append(flat_ast)
         

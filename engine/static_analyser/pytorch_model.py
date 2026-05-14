@@ -3,10 +3,14 @@ from typing import Self, List, Any, Tuple
 import torch
 
 class PyTorchModel():
-    def __init__(self:Self, data:Tuple[List[List[Any]]]) -> None:
+    def __init__(self:Self, data:Tuple[List[List[Any]]], import_list:List[str]) -> None:
         self._lexical = {"Unknown": 0, "USER_str": 1, "USER_int":2, "USER_float":3, "USER_bool":4, "USER_none":5, "No_value":6}
         self._device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
         self.values = self.transform_data(data)
+
+        for import_from in import_list:
+            if import_from not in self._lexical:
+                self._lexical[import_from] = len(self._lexical)
 
         print(f"{self.__class__.__name__} initizalizing")
         print(f"Using {self._device} device")
@@ -21,18 +25,10 @@ class PyTorchModel():
         for d in data:
             main_list = []
             for node in d:
-                word, parent, children, value = node
+                word, parent, value = node
 
                 if word not in self._lexical:
                     self._lexical[word] = len(self._lexical)
-
-                if word == "AST_ImportFrom":
-                    names_id = children[1]
-                    for alias_id in d[names_id][2]:
-                        name_id = d[alias_id][2][0]
-                        value = d[name_id][3]
-                        if value not in self._lexical and value not in ("OBJ_snake_case", "OBJ_true_property"):
-                            self._lexical[value] = len(self._lexical)       
 
                 word, value = self._lexical.get(word, "Unknown"), self._lexical.get(value, value)
 
