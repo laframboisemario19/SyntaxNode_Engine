@@ -16,6 +16,5 @@ Composants publics :
 
 from .core import SyntaxNodeEngine
 from .error import SyntaxNodeError, EngineNotConfiguredError, StrategyNotFoundError
-from .validator import SyntaxNodeValidator
 
-__all__ = ["SyntaxNodeEngine", "SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError", "SyntaxNodeValidator"]
+__all__ = ["SyntaxNodeEngine", "SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError"]

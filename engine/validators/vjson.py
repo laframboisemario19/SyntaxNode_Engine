@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import List, Any, Optional, Literal
-from .error import JsonFormatError
+from typing import List, Any, Optional, Literal, Dict
+from ..error import JsonFormatError
 from pydantic import BaseModel, ValidationError
 
 class InternFunction(BaseModel):
@@ -18,23 +18,49 @@ class Function(BaseModel):
 
 class Properties(BaseModel):
     name: str
+    type: Literal["int", "str", "float", "bool"]
+    value: Optional[int | str | float | bool] = None
+
+class EnumProperties(BaseModel):
+    name: str
+    type: Literal["enum"]
+    namespace: List[str]
+    value: str
+
+class FlagProperties(BaseModel):
+    name: str
+    type: Literal["flag"]
+    namespace: List[str]
+    value: FlagValue
+
+class ObjectProperties(BaseModel):
+    name: str
     type: str
     module: str
-    value: List[Value]
+    value: List[ObjectValue]
 
 class Inheritance(BaseModel):
     type: str
     module: str
 
+class FlagValue(BaseModel):
+    exclusive: Dict[str, str]
+    non_exclusive: List[str]
+
+class ObjectValue(BaseModel):
+    type: str
+    value: str | List[Value] | int | bool | float
+    name: str
+
 class Value(BaseModel):
     type: str
     value: str | List[Value] | int | bool | float
-    name: Optional[str] = None
 
 class Variable(BaseModel):
     id: str
     name: str
     value: Value
+    scope: Literal["public", "private"]
 
 class Component(BaseModel):
     id: str
@@ -45,6 +71,7 @@ class Component(BaseModel):
     child: List[str]
     variable: List[Variable]
     inheritance: List[Inheritance]
+    properties:List[Properties | EnumProperties | FlagProperties | ObjectProperties]
     function: List[Function | InternFunction]
 
 class Link(BaseModel):
@@ -52,13 +79,16 @@ class Link(BaseModel):
     source: str
     target: str
     type: str
-    type: str
 
 class Project(BaseModel):
+    id_project:str
+    id_owner:str
+    last_update:str
+    project_name:str
     components: List[Component]
     links: List[Link]
 
-class SyntaxNodeValidator:
+class JsonValidator:
     @staticmethod
     def validate_data(data: Any) -> bool:
         if not isinstance(data, list):

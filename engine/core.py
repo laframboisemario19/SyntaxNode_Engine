@@ -11,7 +11,7 @@ from io import BytesIO
 
 from .strategies import StrategyFactory, StrategyType, ConfigType
 from .error import StrategyNotFoundError
-from .validator import SyntaxNodeValidator
+from .validators import JsonValidator
 
 class SyntaxNodeEngine():
     """
@@ -150,7 +150,7 @@ class SyntaxNodeEngine():
         return self._current_lib_strategy.get_meta_objects()
     
     def validate_data(self:Self, data:List[Dict[str, Any]]) -> bool:
-        return SyntaxNodeValidator.validate_data(data)
+        return JsonValidator.validate_data(data)
 
 
     def get_code_files(self: Self, data:List[Dict[str, Any]]) -> BytesIO:
