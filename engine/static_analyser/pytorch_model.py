@@ -19,7 +19,7 @@ class PyTorchModel():
         tensor_list = []
         user_input = {None: "USER_none", "":"No_value", "str":"USER_str", "int":"USER_int", "float":"USER_float","bool":"USER_bool"}
         for d in data:
-            main_tensor = torch.tensor([])
+            main_list = []
             for node in d:
                 word, parent, children, value = node
 
@@ -40,8 +40,8 @@ class PyTorchModel():
                     value = user_input.get(value, user_input.get(value.__class__.__name__, None))
                     value = self._lexical[value]
 
-                tensor = torch.tensor([word, parent, value])
-                main_tensor = ([*main_tensor, tensor])
+                main_list.append([word, parent, value])
+                main_tensor = torch.tensor([main_list])
             tensor_list.append(main_tensor)
 
         return tensor_list

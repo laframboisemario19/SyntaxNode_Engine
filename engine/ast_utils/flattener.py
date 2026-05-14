@@ -16,7 +16,7 @@ class ASTFlattener():
         parent_id = parent_id if parent_id is not None else -1
         self.flatten_tree.append([type, parent_id, [], value])
         
-        if parent_id is not None:
+        if parent_id != -1:
             self.flatten_tree[parent_id][2].append(node_id)
 
         return node_id

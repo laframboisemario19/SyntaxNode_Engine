@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import List, Any, Optional, Literal, Dict
-from ..error import JsonFormatError
+from typing import List, Any, Optional, Literal, Dict, Set, Tuple
+from ..error import JsonFormatError, TypeJsonFormatError, ErrorDetails
 from pydantic import BaseModel, ValidationError
+from collections import Counter
 
 class InternFunction(BaseModel):
     id: str
@@ -90,22 +91,77 @@ class Project(BaseModel):
 
 class JsonValidator:
     @staticmethod
-    def validate_data(data: Any) -> bool:
+    def validate_data(data: List[Dict[str, Any]]) -> bool:
         if not isinstance(data, list):
-            raise JsonFormatError(f"Les données doivent être de type list et non de type {data.__class__.__name__}")
+            raise TypeJsonFormatError(f"Les données doivent être de type list et non de type {data.__class__.__name__}")
         
-        for project_data in data:
-            if not isinstance(project_data, dict):
-                raise JsonFormatError(f"Les projets doivent être de type dict et non de type {project_data.__class__.__name__}")
-            
-            try:
-                Project(**project_data) 
-            except ValidationError as e:
-                error_detail = e.errors()[0]
-                
-                error_path = " -> ".join([str(loc) for loc in error_detail["loc"]])
+        project_data = data[0]
+        if not isinstance(project_data, dict):
+            raise TypeJsonFormatError(f"Les projets doivent être de type dict et non de type {project_data.__class__.__name__}")
+        
+        try:
+            Project(**project_data) 
+        except ValidationError as e:
+            error_list = []
+            for error_detail in e.errors():
+                error_path = [str(loc) for loc in error_detail["loc"]]
                 error_msg = error_detail["msg"]
-                
-                raise JsonFormatError(f"Erreur de validation à l'emplacement [{error_path}] : {error_msg}")
+                error_list.append(ErrorDetails(error_path, error_msg))
+            raise JsonFormatError(error_list)
+        
+        # JsonValidator._validate_data_structure(project_data)
+
 
         return True
+    
+    @staticmethod
+    def _validate_data_structure(data: Dict[str, Any]) -> bool:
+        error_list = []
+
+        components_id, components_loc, \
+            variable_id, variable_loc, \
+            function_id, function_loc, \
+            link_id, link_loc, \
+            children_tree = JsonValidator._extract_id(data)
+
+        return True
+    
+    @staticmethod
+    def _extract_id(data: Dict[str, Any]) -> Tuple[List[str]]:
+        components_id = []
+        components_loc = []
+
+        variable_id = []
+        variable_loc = []
+
+        function_id = []
+        function_loc = []
+
+        link_id = []
+        link_loc = []
+
+        children_tree = {}
+
+        for i, component in enumerate(data.get("components", [])):
+            components_id.append(component["id"])
+            components_loc.append(["components", str(i), "id"])
+
+            for j, variable in enumerate(component.get("variable", [])):
+                variable_id.append(variable["id"])
+                variable_loc.append(["components", str(i), "variable", str(j), "id"])
+
+            children_tree[component["id"]] = []
+            for m, child in enumerate(component.get("child", [])):
+                children_tree[component["id"]].append({"child":child, "loc":["components", str(i), "child", str(m)]})
+
+            for k, function in enumerate(component.get("function", [])):
+                function_id.append(function["id"])
+                function_loc.append(["components", str(i), "function", str(k), "id"])
+
+        for l, link in enumerate(data.get("links", [])):
+            link_id.append(link["source"])
+            link_loc.append(["links", str(l), "source"])
+            link_id.append(link["target"])
+            link_loc.append(["links", str(l), "target"])
+
+        return (components_id, components_loc, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree)
