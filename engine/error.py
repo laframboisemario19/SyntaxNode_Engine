@@ -17,3 +17,6 @@ class EngineNotConfiguredError(SyntaxNodeError):
 class StrategyNotFoundError(SyntaxNodeError):
     """Levée quand la librairie ou le langage demandé n'existe pas."""
     pass
+
+class JsonFormatError(SyntaxNodeError):
+    pass

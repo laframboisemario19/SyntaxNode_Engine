@@ -93,18 +93,13 @@ class MetadataSerializer:
         def _recursive(node, current_parent_id = None):
             if isinstance(node, dict):
                 node_id = node.get("id")
-
                 if node_id:
                     result[node_id] = node
-
                     if current_parent_id:
                         node["parent_id"] = current_parent_id
-                
                     next_parent = node_id
-                
                 else:
                     next_parent = current_parent_id
-
                 for value in node.values():
                     _recursive(value, next_parent)
 

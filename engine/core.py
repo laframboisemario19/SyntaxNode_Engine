@@ -11,6 +11,7 @@ from io import BytesIO
 
 from .strategies import StrategyFactory, StrategyType, ConfigType
 from .error import StrategyNotFoundError
+from .validator import SyntaxNodeValidator
 
 class SyntaxNodeEngine():
     """
@@ -34,7 +35,7 @@ class SyntaxNodeEngine():
         """Initialise le moteur avec aucune stratégie sélectionnée par défaut."""
         self._current_lang_strategy = None
         self._current_lib_strategy = None
-
+        
     @property
     def available_lang(self:Self) -> list[str]:
         """
@@ -123,7 +124,7 @@ class SyntaxNodeEngine():
             >>> engine.set_lib("qt", ConfigType.DEFAULT)
         """
         if not self._current_lang_strategy:
-            raise StrategyNotFoundError("Erreur: Vous devez sélectionner un langage avant de définir la librairie.")
+            raise StrategyNotFoundError("Vous devez sélectionner un langage avant de définir la librairie.")
         self._current_lib_strategy = StrategyFactory.get_strategy(StrategyType.LIBRARY, library, config)
 
     def get_meta_objects(self:Self) -> Dict[str, Any]:
@@ -145,9 +146,13 @@ class SyntaxNodeEngine():
             QObject
         """
         if not self._current_lib_strategy:
-            raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
+            raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         return self._current_lib_strategy.get_meta_objects()
     
+    def validate_data(self:Self, data:List[Dict[str, Any]]) -> bool:
+        return SyntaxNodeValidator.validate_data(data)
+
+
     def get_code_files(self: Self, data:List[Dict[str, Any]]) -> BytesIO:
         """
         Génère les fichiers de code source à partir des données de l'interface visuelle.
@@ -179,8 +184,9 @@ class SyntaxNodeEngine():
             'BytesIO'
         """
         if not self._current_lib_strategy:
-            raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
+            raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
+        self.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         return self._current_lang_strategy.get_code_files(self.current_lib, data, metadata)
     
@@ -215,16 +221,17 @@ class SyntaxNodeEngine():
             'BytesIO'
         """
         if not self._current_lib_strategy:
-            raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
+            raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
+        self.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         strategy = StrategyFactory.get_strategy(StrategyType.IMG_GENERATOR, self.current_lib)
 
         return self._current_lang_strategy.generate_bitmap(self.current_lib, strategy, data, metadata, target_id)
-    
+
     def train_ai(self:Self, data:Tuple[List[List[Any]]]) -> None:
         if not self._current_lib_strategy:
-            raise StrategyNotFoundError("Erreur : Aucune librairie n'a été sélectionnée")
+            raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
         metadata = self._current_lib_strategy.metadata
         self._current_lang_strategy.train_ai(self.current_lib, data, metadata)

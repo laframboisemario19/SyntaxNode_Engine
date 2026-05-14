@@ -236,7 +236,7 @@ class QtASTBuilder(ASTBuilder):
             target_value = None
 
             if item.get("category") == "custom":
-                return None
+                continue
             if item.get("module"):
                 target_key = item["module"]
                 target_value = item["type"]

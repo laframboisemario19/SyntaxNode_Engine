@@ -1,8 +1,10 @@
 import json
+import traceback
 from PIL import Image
 from io import BytesIO
 
 from .core import SyntaxNodeEngine, ConfigType
+from .error import SyntaxNodeError
 
 def main():
     ## Instanciation de l'engine
@@ -18,6 +20,8 @@ def main():
     data = None
     with open(path, encoding="utf-8") as file:
         data = json.load(file)
+
+    engine.validate_data(data)
 
     path = "./core/data/projet_test1_malsain.json"
     data2 = None
@@ -45,4 +49,7 @@ def debug(bitmap_buffer:BytesIO):
     
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SyntaxNodeError as e:
+        print(f"{e.__class__.__name__} : {e}")
