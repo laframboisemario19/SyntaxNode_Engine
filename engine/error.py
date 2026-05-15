@@ -5,10 +5,10 @@ Ce module définit la hiérarchie des erreurs spécifiques pouvant être levées
 lors de la configuration, de la résolution des stratégies ou de l'exécution 
 du générateur d'AST et de code.
 """
-from typing import Self, List
+from typing import Self, List, Tuple
 
 __all__ = ["SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError", "TypeJsonFormatError", "ErrorDetails",
-           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "LinkReferenceError",
+           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "ReferenceError",
            "CircularDependencyError", "QtComplianceError"]
 
 class SyntaxNodeError(Exception):
@@ -33,9 +33,10 @@ class TypeJsonFormatError(SyntaxNodeError):
     pass
 
 class ErrorDetails():
-    def __init__(self:Self, loc:List[str], msg: str):
+    def __init__(self:Self, loc:List[str], msg: str, focus_id:str|Tuple[str]|None = None):
         self.loc = loc
         self.msg = msg
+        self.focus_id = focus_id
 
 class ErrorDetailsContainer(SyntaxNodeError):
     def __init__(self:Self, error_detail_list:List[ErrorDetails]):
@@ -65,10 +66,13 @@ class JsonFormatError(ErrorDetailsContainer, DevException):
 class UniqueIdError(ErrorDetailsContainer, DevException):
     pass
 
-class LinkReferenceError(ErrorDetailsContainer, DevException):
+class ReferenceError(ErrorDetailsContainer, DevException):
     pass
 
 class CircularDependencyError(ErrorDetailsContainer, UserException):
+    pass
+
+class TooManyRootError(ErrorDetailsContainer, UserException):
     pass
 
 class QtComplianceError(ErrorDetailsContainer,UserException):

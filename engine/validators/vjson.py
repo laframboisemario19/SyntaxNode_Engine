@@ -118,8 +118,8 @@ class JsonValidator:
     def _validate_data_structure(data: Dict[str, Any]) -> bool:
         error_list = []
         
-        keys = ("component_id", "components_loc", "variable_id", "variable_loc", "function_id", "function_loc", "link_id", "link_loc", "children_tree")
-        id_extracted = {keys[idx]:data_extracted for idx, data_extracted in enumerate(JsonValidator._extract_id(data))}
+        keys = ("component_id", "components_loc", "variable_id", "variable_loc", "function_id", "function_loc", "link_id", "link_loc", "children_tree", "ref_variable_id", "ref_variable_loc")
+        id_extracted = {key:data_extracted for key, data_extracted in zip(keys, JsonValidator._extract_id(data))}
 
         for algo in JsonValidator._algo_list:
             error = algo(id_extracted)
@@ -147,6 +147,9 @@ class JsonValidator:
 
         children_tree = {}
 
+        ref_variable_id = []
+        ref_variable_loc = []
+
         for i, component in enumerate(data.get("components", [])):
             components_id.append(component["id"])
             components_loc.append(["components", str(i), "id"])
@@ -154,6 +157,11 @@ class JsonValidator:
             for j, variable in enumerate(component.get("variable", [])):
                 variable_id.append(variable["id"])
                 variable_loc.append(["components", str(i), "variable", str(j), "id"])
+
+                value = variable["value"]
+                if value["type"] == "id":
+                    ref_variable_id.append(value["value"])
+                    ref_variable_loc.append(["components", str(i), "variable", str(j), "value", "value"])
 
             children_tree[component["id"]] = []
             for m, child in enumerate(component.get("child", [])):
@@ -169,7 +177,7 @@ class JsonValidator:
             link_id.append(link["target"])
             link_loc.append(["links", str(l), "target"])
 
-        return (components_id, components_loc, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree)
+        return (components_id, components_loc, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree, ref_variable_id, ref_variable_loc)
     
     @staticmethod
     def _algo_unique_id(data:Dict[List[str]]) -> UniqueIdError | None:
@@ -179,11 +187,11 @@ class JsonValidator:
         error_list = []
         error = None
 
-        for idx, id_analysing in enumerate(all_id):
+        for id_analysing, location in zip(all_id, all_location):
             if id_analysing not in id_dict:
-                id_dict[id_analysing] = all_location[idx]
+                id_dict[id_analysing] = location
             else:
-                error_path = all_location[idx]
+                error_path = location
                 other_path = " -> ".join(id_dict[id_analysing])
                 error_msg = f"id {id_analysing} également assigné à [{other_path}]"
                 error_list.append(ErrorDetails(error_path, error_msg))
@@ -192,5 +200,52 @@ class JsonValidator:
 
         return error
     
+    @staticmethod
+    def _algo_reference(data:Dict[List[str]]) -> ReferenceError | None:
+        all_id = data["component_id"] + data["variable_id"] + data["function_id"]
+        link_id = data["link_id"] + data["ref_variable_id"]
+        link_loc = data["link_loc"] + data["ref_variable_loc"]
+        error_list = []
+        error = None
+    
+        for id_analysing, location in zip(link_id, link_loc):
+            if id_analysing not in all_id:
+                error_path = location
+                error_msg = f"id {id_analysing} inexistant dans le projet"
+                error_list.append(ErrorDetails(error_path, error_msg))
+            if error_list:
+                error = ReferenceError(error_list)
 
-    _algo_list = (_algo_unique_id,)
+        return error
+    
+    @staticmethod
+    def _algo_circular_dependency(data:Dict[List[str]]) -> CircularDependencyError | None:
+        children_tree = data["children_tree"]
+        error_list = []
+        error = None
+
+        def _recursive(children_tree, sequence, parent_id):
+            children = children_tree[parent_id]
+            if not children:
+                return
+            
+            for child in children:
+                if child["child"] in sequence:
+                    error_path = child["loc"]
+                    error_msg = f"Dépendance circulaire"
+                    focus_id = (sequence[-1], child["child"])
+                    error_list.append(ErrorDetails(error_path, error_msg))
+                else:
+                    sequence.append(child["child"])
+                    _recursive(children_tree, sequence.copy(), child["child"])
+
+        key, value = next(iter(children_tree.items()))
+        for _ in value:
+            _recursive(children_tree, [key], key)
+
+        if error_list:
+            error = CircularDependencyError(error_list)
+
+        return error 
+
+    _algo_list = (_algo_unique_id, _algo_reference, _algo_circular_dependency)
