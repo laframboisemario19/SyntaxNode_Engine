@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from typing import List, Any, Optional, Literal, Dict, Set, Tuple
-from ..error import JsonFormatError, TypeJsonFormatError, ErrorDetails
+from ..error import *
 from pydantic import BaseModel, ValidationError
-from collections import Counter
 
 class InternFunction(BaseModel):
     id: str
@@ -90,6 +89,8 @@ class Project(BaseModel):
     links: List[Link]
 
 class JsonValidator:
+    
+
     @staticmethod
     def validate_data(data: List[Dict[str, Any]]) -> bool:
         if not isinstance(data, list):
@@ -109,20 +110,24 @@ class JsonValidator:
                 error_list.append(ErrorDetails(error_path, error_msg))
             raise JsonFormatError(error_list)
         
-        # JsonValidator._validate_data_structure(project_data)
-
+        JsonValidator._validate_data_structure(project_data)
 
         return True
     
     @staticmethod
     def _validate_data_structure(data: Dict[str, Any]) -> bool:
         error_list = []
+        
+        keys = ("component_id", "components_loc", "variable_id", "variable_loc", "function_id", "function_loc", "link_id", "link_loc", "children_tree")
+        id_extracted = {keys[idx]:data_extracted for idx, data_extracted in enumerate(JsonValidator._extract_id(data))}
 
-        components_id, components_loc, \
-            variable_id, variable_loc, \
-            function_id, function_loc, \
-            link_id, link_loc, \
-            children_tree = JsonValidator._extract_id(data)
+        for algo in JsonValidator._algo_list:
+            error = algo(id_extracted)
+            if error:
+                error_list.append(error)
+
+        if error_list:
+            raise ErrorContainer(error_list)
 
         return True
     
@@ -165,3 +170,27 @@ class JsonValidator:
             link_loc.append(["links", str(l), "target"])
 
         return (components_id, components_loc, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree)
+    
+    @staticmethod
+    def _algo_unique_id(data:Dict[List[str]]) -> UniqueIdError | None:
+        all_id = data["component_id"] + data["variable_id"] + data["function_id"]
+        all_location = data["components_loc"] + data["variable_loc"] + data["function_loc"] + data["link_loc"]
+        id_dict = {}
+        error_list = []
+        error = None
+
+        for idx, id_analysing in enumerate(all_id):
+            if id_analysing not in id_dict:
+                id_dict[id_analysing] = all_location[idx]
+            else:
+                error_path = all_location[idx]
+                other_path = " -> ".join(id_dict[id_analysing])
+                error_msg = f"id {id_analysing} également assigné à [{other_path}]"
+                error_list.append(ErrorDetails(error_path, error_msg))
+            if error_list:
+                error = UniqueIdError(error_list)
+
+        return error
+    
+
+    _algo_list = (_algo_unique_id,)

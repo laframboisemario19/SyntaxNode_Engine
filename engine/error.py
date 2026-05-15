@@ -7,8 +7,18 @@ du générateur d'AST et de code.
 """
 from typing import Self, List
 
+__all__ = ["SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError", "TypeJsonFormatError", "ErrorDetails",
+           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "LinkReferenceError",
+           "CircularDependencyError", "QtComplianceError"]
+
 class SyntaxNodeError(Exception):
     """Exception de base pour le moteur SyntaxNode."""
+    pass
+
+class UserException():
+    pass
+
+class DevException():
     pass
 
 class EngineNotConfiguredError(SyntaxNodeError):
@@ -39,7 +49,7 @@ class ErrorDetailsContainer(SyntaxNodeError):
             message += f"{self.__class__.__name__} : Erreur à l'emplacement [{error_path}] : {error_msg}\n"
         return message
     
-class ErrorContainer(SyntaxError):
+class ErrorContainer(SyntaxNodeError):
     def __init__(self:Self, error_list:List[ErrorDetailsContainer]):
         self.error_list:List[ErrorDetailsContainer] = error_list
     
@@ -49,14 +59,17 @@ class ErrorContainer(SyntaxError):
             message += str(error)        
         return message
 
-class JsonFormatError(ErrorDetailsContainer):
+class JsonFormatError(ErrorDetailsContainer, DevException):
     pass
 
-class LinkReferenceError(ErrorDetailsContainer):
+class UniqueIdError(ErrorDetailsContainer, DevException):
     pass
 
-class CircularDependencyError(ErrorDetailsContainer):
+class LinkReferenceError(ErrorDetailsContainer, DevException):
     pass
 
-class QtComplianceError(ErrorDetailsContainer):
+class CircularDependencyError(ErrorDetailsContainer, UserException):
+    pass
+
+class QtComplianceError(ErrorDetailsContainer,UserException):
     pass
