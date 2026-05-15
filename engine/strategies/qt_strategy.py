@@ -129,11 +129,11 @@ class QtOffScreenGenerator(ImageGeneratorStrategy):
     def _generate_main_widget(self: Self, main_widget:type[QWidget]) -> QWidget:
         root_widget = main_widget()
         
-        root_widget.ensure_polished()
-        root_widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen, True)
-        root_widget.show()
+        # root_widget.ensure_polished()
+        root_widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen)
+        # root_widget.show()
         
-        self._app.process_events()
+        # self._app.process_events()
         
         root_widget.adjust_size()
 
