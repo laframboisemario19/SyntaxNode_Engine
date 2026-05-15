@@ -66,6 +66,6 @@ class PythonStrategy(LanguageStrategy):
             flat_ast_list.append(flat_ast)
         
         if not self._pytorch_model:
-            self._pytorch_model = PyTorchModel(tuple(flat_ast_list))
+            self._pytorch_model = PyTorchModel(tuple(flat_ast_list), import_list)
         else:
             self._pytorch_model.transform_data(tuple(flat_ast_list))

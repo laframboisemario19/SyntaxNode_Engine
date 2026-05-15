@@ -109,13 +109,8 @@ class QtOffScreenGenerator(ImageGeneratorStrategy):
     def generate_preview(self:Self, ast_root: ast.Module) -> BytesIO:
         GeneratedAppClass = self._compile_ast(ast_root)
         
-        main_widget, widget = self._generate_main_widget(GeneratedAppClass)
-        target_w = widget.width if widget.width > 0 else 200
-        target_h = widget.height if widget.height > 0 else 200
+        _, widget = self._generate_main_widget(GeneratedAppClass)
 
-        # pixmap = self._create_pixmap(target_w, target_h)
-        
-        # widget.render(pixmap)
         pixmap = widget.grab()
         image = pixmap.to_image()
         
@@ -133,25 +128,21 @@ class QtOffScreenGenerator(ImageGeneratorStrategy):
     
     def _generate_main_widget(self: Self, main_widget:type[QWidget]) -> QWidget:
         root_widget = main_widget()
+        
+        root_widget.ensure_polished()
+        root_widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen, True)
+        root_widget.show()
+        
+        self._app.process_events()
+        
+        root_widget.adjust_size()
+
         if hasattr(root_widget, "my_widget"):
             widget = root_widget.my_widget
         else:
             widget = root_widget
 
-        widget.set_attribute(Qt.WidgetAttribute.WA_DontShowOnScreen)
-        widget.show()
-        
-        widget.adjust_size()
-
         return root_widget, widget
-    
-    def _create_pixmap(self: Self, width:int, height:int):
-        pixmap = QPixmap(width, height)
-        pixmap.fill(Qt.GlobalColor.white)
-
-        self._app.process_events()
-
-        return pixmap
     
     def _convert_to_buffer(self, image: QImage) -> BytesIO:
         byte_array = QByteArray()

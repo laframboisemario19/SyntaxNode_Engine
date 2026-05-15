@@ -16,7 +16,7 @@ def main():
     # # ## Obtenir les metadata
     # meta_objects = engine.get_meta_objects()
 
-    path = "./core/data/projet_test1.json"
+    path = "./core/data/projet_test2.json"
     data = None
     with open(path, encoding="utf-8") as file:
         data = json.load(file)
@@ -36,9 +36,9 @@ def main():
     with open(output_path, "wb") as out_file:
         out_file.write(code_files.getvalue())
 
-    # # Obtenir le buffer contenant l'image demandée
-    # bitmap_buffer = engine.generate_bitmap(data, "12")
-    # debug(bitmap_buffer)
+    # Obtenir le buffer contenant l'image demandée
+    bitmap_buffer = engine.generate_bitmap(data, "3")
+    debug(bitmap_buffer)
 
     engine.train_ai((data, data2))
 

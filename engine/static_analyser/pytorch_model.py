@@ -25,7 +25,7 @@ class PyTorchModel():
         for d in data:
             main_list = []
             for node in d:
-                word, parent, value = node
+                word, parent, _, value = node
 
                 if word not in self._lexical:
                     self._lexical[word] = len(self._lexical)
