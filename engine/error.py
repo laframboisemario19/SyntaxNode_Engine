@@ -8,8 +8,7 @@ du générateur d'AST et de code.
 from typing import Self, List, Tuple
 
 __all__ = ["SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError", "TypeJsonFormatError", "ErrorDetails",
-           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "ReferenceError",
-           "CircularDependencyError", "QtComplianceError"]
+           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "ReferenceError", "QtComplianceError", "RootError", "LinksError"]
 
 class SyntaxNodeError(Exception):
     """Exception de base pour le moteur SyntaxNode."""
@@ -69,10 +68,10 @@ class UniqueIdError(ErrorDetailsContainer, DevException):
 class ReferenceError(ErrorDetailsContainer, DevException):
     pass
 
-class CircularDependencyError(ErrorDetailsContainer, UserException):
+class RootError(DevException):
     pass
 
-class TooManyRootError(ErrorDetailsContainer, UserException):
+class LinksError(ErrorDetailsContainer, UserException):
     pass
 
 class QtComplianceError(ErrorDetailsContainer,UserException):

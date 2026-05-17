@@ -16,7 +16,7 @@ def main():
     # # ## Obtenir les metadata
     # meta_objects = engine.get_meta_objects()
 
-    path = "./core/data/projet_test1.json"
+    path = "./core/data/projet_test2.json"
     data = None
     with open(path, encoding="utf-8") as file:
         data = json.load(file)

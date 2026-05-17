@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Any, Optional, Literal, Dict, Set, Tuple
 from ..error import *
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, field_validator
 
 class InternFunction(BaseModel):
     id: str
@@ -89,8 +89,17 @@ class Project(BaseModel):
     links: List[Link]
 
 class JsonValidator:
-    
 
+    @field_validator("components")
+    @classmethod
+    def validate_root_component(cls, components:List[Component]) -> List[Component]:
+        if not components:
+            raise RootError("Le projet doit avoir au minimum 1 composant.")
+        if components[0].category != "custom":
+            raise RootError("Le premier composant doit être de category custom.")
+
+        return components
+    
     @staticmethod
     def validate_data(data: List[Dict[str, Any]]) -> bool:
         if not isinstance(data, list):
@@ -182,7 +191,7 @@ class JsonValidator:
     @staticmethod
     def _algo_unique_id(data:Dict[List[str]]) -> UniqueIdError | None:
         all_id = data["component_id"] + data["variable_id"] + data["function_id"]
-        all_location = data["components_loc"] + data["variable_loc"] + data["function_loc"] + data["link_loc"]
+        all_location = data["components_loc"] + data["variable_loc"] + data["function_loc"]
         id_dict = {}
         error_list = []
         error = None
@@ -195,8 +204,9 @@ class JsonValidator:
                 other_path = " -> ".join(id_dict[id_analysing])
                 error_msg = f"id {id_analysing} également assigné à [{other_path}]"
                 error_list.append(ErrorDetails(error_path, error_msg))
-            if error_list:
-                error = UniqueIdError(error_list)
+
+        if error_list:
+            error = UniqueIdError(error_list)
 
         return error
     
@@ -213,38 +223,48 @@ class JsonValidator:
                 error_path = location
                 error_msg = f"id {id_analysing} inexistant dans le projet"
                 error_list.append(ErrorDetails(error_path, error_msg))
-            if error_list:
-                error = ReferenceError(error_list)
+        if error_list:
+            error = ReferenceError(error_list)
 
         return error
     
     @staticmethod
-    def _algo_circular_dependency(data:Dict[List[str]]) -> CircularDependencyError | None:
+    def _algo_circular_dependency(data:Dict[List[str]]) -> LinksError | None:
+        comps_id = data["component_id"]
+        comps_loc = data["components_loc"]
         children_tree = data["children_tree"]
-        error_list = []
+        error_details_list = []
         error = None
+        sequences = set()
 
         def _recursive(children_tree, sequence, parent_id):
             children = children_tree[parent_id]
             if not children:
-                return
+                return sequence
             
             for child in children:
                 if child["child"] in sequence:
                     error_path = child["loc"]
                     error_msg = f"Dépendance circulaire"
                     focus_id = (sequence[-1], child["child"])
-                    error_list.append(ErrorDetails(error_path, error_msg))
+                    error_details_list.append(ErrorDetails(error_path, error_msg, focus_id))
                 else:
-                    sequence.append(child["child"])
-                    _recursive(children_tree, sequence.copy(), child["child"])
+                    new_seq = [*sequence, child["child"]]
+                    sequences.update(_recursive(children_tree, new_seq, child["child"]))
+            return sequence
+          
+        key = next(iter(children_tree))
+        sequences.update(_recursive(children_tree, [key], key))
+        
+        for comp_id, comp_loc in zip(comps_id, comps_loc):
+            if comp_id not in sequences:
+                error_path = comp_loc
+                error_msg = f"Tous les éléments doivent être connectés de près ou de loin au composant principal"
+                focus_id = comp_id
+                error_details_list.append(ErrorDetails(error_path, error_msg, focus_id))
 
-        key, value = next(iter(children_tree.items()))
-        for _ in value:
-            _recursive(children_tree, [key], key)
-
-        if error_list:
-            error = CircularDependencyError(error_list)
+        if error_details_list:
+            error = LinksError(error_details_list)
 
         return error 
 
