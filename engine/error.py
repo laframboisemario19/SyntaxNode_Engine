@@ -33,6 +33,7 @@ class ErrorDetails():
         self.loc = loc
         self.msg = msg
         self.focus_id = focus_id
+        self.user_msg = "Message à venir..."
 
 class ErrorDetailsContainer(SyntaxNodeError):
     def __init__(self:Self, error_detail_list:List[ErrorDetails]):
