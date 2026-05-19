@@ -37,7 +37,10 @@ class ASTBuilder(ABC):
         pass
 
     def print_tree(self):
-        print(ast.dump(self._tree, indent=4))
+        tree = ast.dump(self._tree, indent=4)
+
+        with open("../../data/debug_ast.txt", "w", encoding="utf-8") as f:
+            f.write(tree)
 
     def fix_locations(self):
         ast.fix_missing_locations(self._tree)

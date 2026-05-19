@@ -52,6 +52,14 @@ class PythonStrategy(LanguageStrategy):
 
         return self._image_generator.generate_preview(tree)
     
+    def validate_ast(self:Self, library, data, metadata) -> bool:
+        if library not in self._directors:
+            self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))
+
+        ast = self._directors[library].make(data, metadata)
+
+        return True
+    
     def train_ai(self:Self, library:str, data:Tuple[List[List[Any]]], metadata) -> None:
         if library not in self._directors:
             self._directors[library] = ASTDirector(BuilderFactory.get_builder(library))

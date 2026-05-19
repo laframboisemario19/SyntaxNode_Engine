@@ -150,7 +150,11 @@ class SyntaxNodeEngine():
         return self._current_lib_strategy.get_meta_objects()
     
     def validate_data(self:Self, data:List[Dict[str, Any]]) -> bool:
-        return JsonValidator.validate_data(data)
+        json_valid = JsonValidator.validate_data(data)
+        metadata = self._current_lib_strategy.metadata
+        ast_valid = self._current_lang_strategy.validate_ast(self.current_lib, data, metadata)
+
+        return json_valid and ast_valid
 
 
     def get_code_files(self: Self, data:List[Dict[str, Any]]) -> BytesIO:
@@ -186,7 +190,7 @@ class SyntaxNodeEngine():
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
-        self.validate_data(data)
+        JsonValidator.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         return self._current_lang_strategy.get_code_files(self.current_lib, data, metadata)
     
@@ -223,7 +227,7 @@ class SyntaxNodeEngine():
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
-        self.validate_data(data)
+        JsonValidator.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         strategy = StrategyFactory.get_strategy(StrategyType.IMG_GENERATOR, self.current_lib)
 

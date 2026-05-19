@@ -1,5 +1,6 @@
 import ast
 from .ast_builder import ASTBuilder
+from ..validators import ASTValidator
 from typing import Any
 
 
@@ -9,6 +10,7 @@ class QtASTBuilder(ASTBuilder):
         self._current_root = {}
         self._first_root_id = None
         self._root_variable = []
+        self._ast_validator = ASTValidator()
 
         self._primitive_type = ["int", "str", "bool", "float"]
         self._structure_type = {"list" : ast.List, "tuple": ast.Tuple, "dict": ast.Dict, "set": ast.Set}
@@ -23,8 +25,9 @@ class QtASTBuilder(ASTBuilder):
         self._first_root_id = None
         self._root_variable = []
 
-    def create_tree(self):
+    def create_tree(self, data):
         self._tree = ast.Module(body=[], type_ignores=[])
+        self._ast_validator.config(data)
 
     def get_ast(self):
         tree = self._tree
@@ -43,11 +46,13 @@ class QtASTBuilder(ASTBuilder):
         component = data["components"]
         root_list = self._find_root(component)
         self._build_class_node(root_list, data_dict)
+
         for node_id, node in self._current_root.items():
             if not self._first_root_id:
                 self._first_root_id = node_id
+            self._ast_validator.insert_details(node, node_id)
             self._build_init_node(node_id, node, data, data_dict)
-            self._build_function(node.body, data_dict[node_id]["function"])
+            self._build_function(node.body, data_dict[node_id]["function"], node_id)
 
     def build_main(self, data_dict):
         # Création de la fonction main
@@ -87,6 +92,9 @@ class QtASTBuilder(ASTBuilder):
         if_body = [ast.Expr(value=ast.Call(func=ast.Name(id="main", ctx=ast.Load()), args=[], keywords=[]))]
 
         if_main_node = ast.If(test=if_test, body=if_body, orelse=[])
+
+        self._ast_validator.insert_details(if_main_node, "__main__")
+
         self._tree.body.append(if_main_node)
                                                 
     def _build_class_node(self, root_list, data_dict):
@@ -324,7 +332,7 @@ class QtASTBuilder(ASTBuilder):
                     ctx = ast.Load()
                 )
     
-    def _build_function(self, body, functions):
+    def _build_function(self, body, functions, node_id):
         for func in functions:
             if not func.get("is_intern", True):
                 arguments = ast.arguments(posonlyargs=[], args=[ast.arg(arg=p) for p in func["params"]], kwonlyargs=[], kw_defaults=[], defaults=[])
@@ -339,6 +347,7 @@ class QtASTBuilder(ASTBuilder):
                                 body = func_body,
                                 decorator_list = [],
                                 type_params = [])
+                
                 body.append(func_node)
 
     def _build_links(self, root_id, body, data, data_dict):

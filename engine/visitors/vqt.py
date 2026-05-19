@@ -10,7 +10,7 @@ class ImportFromExtractor(ast.NodeVisitor):
         self._import_list = []
         super().generic_visit(node)
         return self._import_list
-##
+    
     @override
     def visit_ImportFrom(self:Self, node:ast.ImportFrom):
         for alias in node.names:

@@ -7,16 +7,18 @@ class ASTDirector():
 
     def __init__(self, builder:ASTBuilder):
         self._builder = builder
+        self._ast_validator = builder._ast_validator
     
     def change_builder(self, builder:ASTBuilder):
         self._builder = builder
+        self._ast_validator = builder._ast_validator
 
     def make(self, data, metadata, target_id = ""):
         data = data[0]
         mds.sanitize_properties(data["components"], metadata)
 
         self._builder.reset()
-        self._builder.create_tree()  
+        self._builder.create_tree(data)  
 
         data_dict = mds.list_to_map(data["components"])
 
@@ -32,9 +34,18 @@ class ASTDirector():
         self._builder.build_class(data, data_dict)
         self._builder.build_main(data_dict)
         self._builder.fix_locations()
+        
         # self._builder.print_tree()
 
-        return self._builder.get_ast()
+        tree = self._builder.get_ast()
+        self._ast_validator.validate_data(tree)
+
+        
+
+        return tree
+    
+    def validate_ast(self:Self, tree):
+        self._ast_validator.validate_ast(tree)
     
     def _rearrange_data(self:Self, target_id, data_dict, components, root_id) -> None:
         parent_id = self._find_parent(target_id, components)
