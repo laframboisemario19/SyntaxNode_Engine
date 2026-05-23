@@ -2,12 +2,14 @@ import ast
 import importlib
 import builtins
 from typing import List, Dict, Any, Self, override
-from ..error import CodeReferenceError, ErrorContainer, IllegalImportError, ErrorDetails
+from ..error import CodeReferenceError, ErrorContainer, IllegalImportError, ErrorDetails, FatalError
 
 from __feature__ import true_property, snake_case #type: ignore[import-not-found]
 
 class FunctionValidator(ast.NodeVisitor):
     _BUILTIN_FUNCTIONS = set(func_name for func_name, func in builtins.__dict__.items() if callable(func))
+    _BLACK_LIST = set(["eval", "exec", "compile", "open", "__import__", "__builtins__", "__globals__", "__class__", "__subclasses__", "sys"])
+    
 
     def __init__(self:Self):
         self._error_details_list = []
@@ -51,7 +53,8 @@ class FunctionValidator(ast.NodeVisitor):
                 sn_loc = getattr(self._class_node, "sn_loc", [])
                 sn_id = getattr(self._class_node, "sn_id", "")
                 msg = f"Création de variable de classe interdite dans les fonctions. Variable : {self._target_attribute_visitor._attribute} invalide"
-                error_detail = ErrorDetails(sn_loc, msg, sn_id)
+                user_msg = f"Création de variable de classe interdite dans les fonctions."
+                error_detail = ErrorDetails(sn_loc, msg, sn_id, user_msg)
                 self._error_details_list.append(error_detail)
 
         self.visit(node.value)
@@ -60,8 +63,16 @@ class FunctionValidator(ast.NodeVisitor):
     def visit_Name(self:Self, node:ast.Name) -> None:
         if self._is_init_function or node.id == "self":
             return
+        elif node.id in FunctionValidator._BLACK_LIST:
+            sn_loc = getattr(self._class_node, "sn_loc", [])
+            sn_id = getattr(self._class_node, "sn_id", "")
+            msg = f"Fonction potentiellement malveillante, requête refusée"
+            user_msg = f"Une erreur est survenue. Impossible de traiter la requête."
+            error_detail = ErrorDetails(sn_loc, msg, sn_id, user_msg)
+            raise FatalError(error_detail)
         elif node.id not in (self._local_variable | self._valid_variable):
-            error_detail = ErrorDetails(self._class_node.sn_loc, f"variable {node.id} inconnue", self._class_node.sn_id)
+            msg = f"variable {node.id} inconnue"
+            error_detail = ErrorDetails(self._class_node.sn_loc, msg, self._class_node.sn_id, msg)
             self._error_details_list.append(error_detail)
 
     @override
@@ -73,7 +84,8 @@ class FunctionValidator(ast.NodeVisitor):
         if func_name not in (self._valid_function | self._BUILTIN_FUNCTIONS | self._local_variable | self._valid_variable):
             sn_loc = getattr(self._class_node, "sn_loc", [])
             sn_id = getattr(self._class_node, "sn_loc", "")
-            error_detail = ErrorDetails(sn_loc, f"L'identifiant {func_name} inconnue", sn_id)
+            msg = f"L'identifiant {func_name} inconnue"
+            error_detail = ErrorDetails(sn_loc, msg, sn_id, msg)
             self._error_details_list.append(error_detail)
         for func_arg in node.args:
             self.generic_visit(func_arg)
@@ -162,7 +174,7 @@ class ASTValidator:
                     else:
                         self._local_variable[component["id"]].add(f"self.{attr}")
             except Exception as e:
-                error_detail = ErrorDetails(loc, f"Impossible d'importer {class_name} du module {module_name}", component["id"])
+                error_detail = ErrorDetails(loc, f"Impossible d'importer {class_name} du module {module_name}", component["id"], f"Il n'est pas possible de faire des imports à l'intérieur des fonctions.")
                 raise IllegalImportError([error_detail])
 
             for variable in component.get("variable", []):

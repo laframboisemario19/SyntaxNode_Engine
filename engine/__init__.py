@@ -16,8 +16,8 @@ Composants publics :
 
 from .core import SyntaxNodeEngine
 from .error import (SyntaxNodeError, EngineNotConfiguredError, StrategyNotFoundError, TypeJsonFormatError, ErrorDetails, ErrorDetailsContainer,
-ErrorContainer, JsonFormatError, UniqueIdError, ReferenceError, QtComplianceError, RootError, LinksError, CodeReferenceError)
+ErrorContainer, JsonFormatError, UniqueIdError, ReferenceError, QtStructureError, RootError, LinksError, CodeReferenceError, FatalError)
 
 __all__ = ["SyntaxNodeEngine", "SyntaxNodeError", "EngineNotConfiguredError", "StrategyNotFoundError", "TypeJsonFormatError", "ErrorDetails",
-           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "ReferenceError", "QtComplianceError", "RootError", "LinksError",
-           "CodeReferenceError"]
+           "ErrorDetailsContainer", "ErrorContainer", "JsonFormatError", "UniqueIdError", "ReferenceError", "QtStructureError", "RootError", "LinksError",
+           "CodeReferenceError", "FatalError"]

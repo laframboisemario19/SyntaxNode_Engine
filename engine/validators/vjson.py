@@ -97,6 +97,10 @@ class JsonValidator:
             raise RootError("Le projet doit avoir au minimum 1 composant.")
         if components[0].category != "custom":
             raise RootError("Le premier composant doit être de category custom.")
+        
+        for component in components[1:]:
+            if component.category == "custom":
+                raise RootError("Seul le premier composant peut être de category custom.")
 
         return components
     
@@ -127,16 +131,17 @@ class JsonValidator:
     def _validate_data_structure(data: Dict[str, Any]) -> bool:
         error_list = []
         
-        keys = ("component_id", "components_loc", "variable_id", "variable_loc", "function_id", "function_loc", "link_id", "link_loc", "children_tree", "ref_variable_id", "ref_variable_loc")
+        keys = ("component_id", "components_loc", "components_dict", "variable_id", "variable_loc", "function_id", "function_loc", "link_id", "link_loc", "children_tree", "ref_variable_id", "ref_variable_loc")
         id_extracted = {key:data_extracted for key, data_extracted in zip(keys, JsonValidator._extract_id(data))}
 
-        for algo in JsonValidator._algo_list:
-            error = algo(id_extracted)
-            if error:
-                error_list.append(error)
+        for algo_seq in JsonValidator._algo_list:
+            for algo in algo_seq:
+                error = algo(id_extracted)
+                if error:
+                    error_list.append(error)
 
-        if error_list:
-            raise ErrorContainer(error_list)
+            if error_list:
+                raise ErrorContainer(error_list)
 
         return True
     
@@ -144,6 +149,7 @@ class JsonValidator:
     def _extract_id(data: Dict[str, Any]) -> Tuple[List[str]]:
         components_id = []
         components_loc = []
+        components_dict = {}
 
         variable_id = []
         variable_loc = []
@@ -161,7 +167,10 @@ class JsonValidator:
 
         for i, component in enumerate(data.get("components", [])):
             components_id.append(component["id"])
-            components_loc.append(["components", str(i), "id"])
+            loc = ["components", str(i), "id"]
+            components_loc.append(loc)
+
+            components_dict[component["id"]] = {"loc" : loc, "category": component["category"]}
 
             for j, variable in enumerate(component.get("variable", [])):
                 variable_id.append(variable["id"])
@@ -186,7 +195,7 @@ class JsonValidator:
             link_id.append(link["target"])
             link_loc.append(["links", str(l), "target"])
 
-        return (components_id, components_loc, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree, ref_variable_id, ref_variable_loc)
+        return (components_id, components_loc, components_dict, variable_id, variable_loc, function_id, function_loc, link_id, link_loc, children_tree, ref_variable_id, ref_variable_loc)
     
     @staticmethod
     def _algo_unique_id(data:Dict[List[str]]) -> UniqueIdError | None:
@@ -246,6 +255,7 @@ class JsonValidator:
                 if child["child"] in sequence:
                     error_path = child["loc"]
                     error_msg = f"Dépendance circulaire"
+                    user_msg = f"Une dépendance circulaire est causée par les composants : {sequence[-1]}, {child["child"]}"
                     focus_id = (sequence[-1], child["child"])
                     error_details_list.append(ErrorDetails(error_path, error_msg, focus_id))
                 else:
@@ -267,5 +277,29 @@ class JsonValidator:
             error = LinksError(error_details_list)
 
         return error 
+    
+    @staticmethod
+    def _algo_qt_structure(data:Dict[List[str]]) -> QtStructureError | None:
+        components_dict = data["components_dict"]
+        children_tree = data["children_tree"]
+        error_list = []
+        error = None
 
-    _algo_list = (_algo_unique_id, _algo_reference, _algo_circular_dependency)
+        for comp_id, component in components_dict.items():
+            category = component["category"]
+            if category == "widget" or category == "custom":
+                for child in children_tree[comp_id]:
+                    child_id = child["child"]
+                    if components_dict[child_id]["category"] == "widget":
+                        error_path = component["loc"]
+                        error_msg = f"widget {comp_id} ne peut pas être parent direct de {child_id}, car il est aussi un widget"
+                        focus_id = (comp_id, child_id)
+                        user_msg = f"Le widget {comp_id} ne peut pas être parent direct de {child_id}, car il est aussi un widget"
+                        error_list.append(ErrorDetails(error_path, error_msg, focus_id))
+
+        if error_list:
+            error = QtStructureError(error_list)
+
+        return error
+
+    _algo_list = ((_algo_unique_id, _algo_reference), (_algo_circular_dependency,), (_algo_qt_structure,))

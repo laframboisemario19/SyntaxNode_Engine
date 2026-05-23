@@ -29,7 +29,7 @@ class TypeJsonFormatError(SyntaxNodeError):
     pass
 
 class ErrorDetails():
-    def __init__(self:Self, loc:List[str], msg: str, focus_id:str|Tuple[str]|None = None):
+    def __init__(self:Self, loc:List[str], msg: str, focus_id:str|Tuple[str]|None = None, user_msg:str = "") -> None:
         self.loc = loc
         self.msg = msg
         self.focus_id = focus_id
@@ -72,11 +72,14 @@ class RootError(DevException):
 class LinksError(ErrorDetailsContainer, UserException):
     pass
 
-class QtComplianceError(ErrorDetailsContainer, UserException):
+class QtStructureError(ErrorDetailsContainer, UserException):
     pass
 
 class CodeReferenceError(ErrorDetailsContainer, UserException):
     pass
 
 class IllegalImportError(ErrorDetailsContainer, UserException):
+    pass
+
+class FatalError(ErrorDetailsContainer, DevException, UserException):
     pass
