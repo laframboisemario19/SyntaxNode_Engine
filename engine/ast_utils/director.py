@@ -38,9 +38,9 @@ class ASTDirector():
         # self._builder.print_tree()
 
         tree = self._builder.get_ast()
-        self._ast_validator.validate_data(tree)
-
         
+        if not target_id:
+            self._ast_validator.validate_data(tree)
 
         return tree
     
