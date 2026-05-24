@@ -1,0 +1,226 @@
+[
+    {
+        "id_project": "3",
+        "id_owner": "1",
+        "last_update": "2026-05-23T10:00:00.000-Z",
+        "project_name": "user_profile",
+        "components": [
+            {
+                "id": "1",
+                "type": "ProfileApp",
+                "category": "custom",
+                "name": "app",
+                "module": "PySide6.QtCore",
+                "variable": [
+                    {
+                        "id": "9",
+                        "name": "numerator_spin",
+                        "value": {
+                            "type": "id",
+                            "value": "2"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "10",
+                        "name": "denominator_spin",
+                        "value": {
+                            "type": "id",
+                            "value": "3"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "11",
+                        "name": "result_label",
+                        "value": {
+                            "type": "id",
+                            "value": "4"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "12",
+                        "name": "calc_btn",
+                        "value": {
+                            "type": "id",
+                            "value": "5"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "child": [
+                    "6"
+                ],
+                "properties": [
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "Profil utilisateur"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "8",
+                        "name": "on_calc",
+                        "params": [
+                            "self"
+                        ],
+                        "code": [
+                            "total = self.numerator_spin.value",
+                            "count = self.denominator_spin.value",
+                            "moyenne = total / count",
+                            "self.result_label.text = f'Moyenne : {moyenne:.2f}'"
+                        ],
+                        "is_intern": false
+                    }
+                ]
+            },
+            {
+                "id": "6",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [
+                    "2",
+                    "3",
+                    "5",
+                    "4"
+                ],
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "2",
+                "type": "QSpinBox",
+                "category": "widget",
+                "name": "numerator_spin",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "minimum",
+                        "type": "int",
+                        "value": 2
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 50
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 5
+                    },
+                    {
+                        "name": "suffix",
+                        "type": "str",
+                        "value": " unités"
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "3",
+                "type": "QSpinBox",
+                "category": "widget",
+                "name": "denominator_spin",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "minimum",
+                        "type": "int",
+                        "value": 1
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 100
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "5",
+                "type": "QPushButton",
+                "category": "widget",
+                "name": "calc_btn",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Tester"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "7",
+                        "name": "clicked",
+                        "is_intern": true,
+                        "code": ""
+                    }
+                ]
+            },
+            {
+                "id": "4",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "result_label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "—"
+                    }
+                ],
+                "function": []
+            }
+        ],
+        "links": [
+            {
+                "id": "L1",
+                "source": "7",
+                "target": "8",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

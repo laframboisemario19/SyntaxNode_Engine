@@ -16,7 +16,10 @@ def main():
     # # ## Obtenir les metadata
     # meta_objects = engine.get_meta_objects()
 
-    path = "./core/data/projet_test5.json"
+    # path = "./core/data/projet_test5.json"
+
+    path = "./core/ai_data/datasets/syntax_node_malicious/unclean/m5_unclean_param_shadow.json"
+
     data = None
     with open(path, encoding="utf-8") as file:
         data = json.load(file)

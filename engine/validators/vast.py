@@ -140,6 +140,8 @@ class ASTValidator:
     def validate_data(self:Self, tree: ast.AST):
         error_list = []
         for validator in self._validators:
+            validator._error_details_list = []
+            validator._is_init_function = True
             validator.visit(tree)
 
             if validator._error_details_list:
