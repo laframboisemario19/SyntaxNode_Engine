@@ -1,29 +1,32 @@
-from typing import Self, List, Any, Tuple, Callable
+from __future__ import annotations
+
+from typing import Self, List, Any, Tuple, override, Dict
 from enum import Enum, auto
 from abc import ABC, abstractmethod
 from pathlib import Path
 import json
+import ast
 
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils import rnn
 
+from ..ast_utils import ASTFlattener, ASTDirector, BuilderFactory
+
 TRAINING_DATA_PATH = Path(__file__).parent.parent.parent / "ai_data" / "training_data"
+DATASETS_PATH = Path(__file__).parent.parent.parent / "ai_data" / "datasets"
 LEXICAL_FILE = TRAINING_DATA_PATH / "data.json"
 
 class TrainingSource(Enum):
     BUGS_IN_PY = auto()
     BANDIT = auto()
-    SYNTAX_NODE_CLEAN = auto()
     SYNTAX_NODE_ERROR = auto()
     SYNTAX_NODE_MALICIOUS = auto()
-
-class DatasetFactory():
-    pass
 
 class BaseDataSet(Dataset, ABC):
     _lexical = {}
     _max_len = 0
+    _flattener = ASTFlattener()
     
     def __init__(self:Self, paths:List[Tuple[str, bool]]) -> None:
         if not BaseDataSet._lexical:
@@ -90,7 +93,9 @@ class BaseDataSet(Dataset, ABC):
     
     @abstractmethod
     def _transform_data(self:Self, path:str) -> Tuple[List[List[Any]]]:
-        pass
+        with open(path, encoding="utf-8") as file:
+            data = json.load(file)
+        
 
     @staticmethod
     def collate_fn(batch:List[Tuple[torch.Tensor, torch.Tensor]]) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -104,9 +109,53 @@ class BugsInPyDataset(BaseDataSet):
         super().__init__()
 
 class BanditDataset(BaseDataSet):
-    def __init__(self:Self) -> None:
-        super().__init__()
+    def __init__(self:Self, paths:List[Tuple[str, bool]]) -> None:
+        super().__init__(paths)
+
+    @override
+    def _transform_data(self:Self, path:str) -> Tuple[List[List[Any]]]:
+        with open(path) as f:
+            tree = ast.parse(f.read())
+        return BaseDataSet._flattener.flatten(tree)
 
 class SyntaxNodeDataset(BaseDataSet):
-    def __init__(self:Self) -> None:
-        super().__init__()
+    def __init__(self:Self, library, metadata: Dict[str, Any], paths:List[Tuple[str, bool]]) -> None:
+        super().__init__(paths)
+        self._metadata = metadata
+        self._director = ASTDirector(BuilderFactory.get_builder(library))
+
+    @override
+    def _transform_data(self:Self, path:str) -> Tuple[List[List[Any]]]:
+        with open(path, encoding="utf-8") as f:
+            content = json.load(f)
+        tree = self._director.make(content, self._metadata)
+        return BaseDataSet._flattener.flatten(tree)
+    
+class DatasetFactory():
+    _sources = {
+        TrainingSource.BUGS_IN_PY : BugsInPyDataset,
+        TrainingSource.BANDIT : BanditDataset,
+        TrainingSource.SYNTAX_NODE_ERROR : SyntaxNodeDataset,
+        TrainingSource.SYNTAX_NODE_MALICIOUS : SyntaxNodeDataset
+    }
+
+    @staticmethod
+    def create(training_source:TrainingSource, library:str | None = None, metadata:Dict[str, Any] | None = None) -> BaseDataSet:
+        paths = DatasetFactory._find_paths(training_source)
+        if library is None and metadata is None:
+            return DatasetFactory._sources[training_source](paths)
+        else:
+            return DatasetFactory._sources[training_source](paths, library, metadata)
+        
+    @staticmethod
+    def _find_paths(training_source:TrainingSource):
+        path_list = []
+        folder = training_source.name.lower()
+        clean_path = DATASETS_PATH / folder / "clean"
+        unclean_path = DATASETS_PATH / folder / "unclean"
+        for p in clean_path.iterdir():
+            path_list.append((str(p), True))
+        for p in unclean_path.iterdir():
+            path_list.append((str(p), False))  
+        return path_list
+
