@@ -45,7 +45,7 @@ def main():
 
     engine.train_ai()
 
-    print(engine.predict(data))
+    print(engine._predict(data))
 
 def debug(bitmap_buffer:BytesIO):
     bitmap_buffer.seek(0)

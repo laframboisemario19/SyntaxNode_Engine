@@ -8,10 +8,15 @@ et aux bibliothèques d'interface graphique.
 
 from typing import Any, Self, Dict, List, Tuple
 from io import BytesIO
+from enum import Enum, auto
 
 from .strategies import StrategyFactory, StrategyType, ConfigType
 from .error import StrategyNotFoundError
 from .validators import JsonValidator
+
+class PredictionValue(Enum):
+    SAFE = 0
+    UNSAFE = 0.4
 
 class SyntaxNodeEngine():
     """
@@ -153,8 +158,9 @@ class SyntaxNodeEngine():
         json_valid = JsonValidator.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         ast_valid = self._current_lang_strategy.validate_ast(self.current_lib, data, metadata)
+        ai_analyze = self._predict(data)
 
-        return json_valid and ast_valid
+        return json_valid and ast_valid and ai_analyze
 
 
     def get_code_files(self: Self, data:List[Dict[str, Any]]) -> BytesIO:
@@ -240,12 +246,15 @@ class SyntaxNodeEngine():
         metadata = self._current_lib_strategy.metadata
         self._current_lang_strategy.train_ai(self.current_lib, metadata)
 
-    def predict(self:Self, data) -> float:
+    def _predict(self:Self, data) -> float:
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
         metadata = self._current_lib_strategy.metadata
-        return self._current_lang_strategy.predict(self.current_lib, data, metadata)
+
+        result = self._current_lang_strategy.predict(self.current_lib, data, metadata)
+        
+        return result >= PredictionValue.SAFE.value
     
 if __name__ == "__main__":
     import doctest
