@@ -16,9 +16,9 @@ def main():
     # # ## Obtenir les metadata
     # meta_objects = engine.get_meta_objects()
 
-    # path = "./core/data/projet_test5.json"
+    path = "./core/data/projet_test5.json"
 
-    path = "./core/ai_data/datasets/syntax_node_malicious/unclean/m5_unclean_param_shadow.json"
+    # path = "./core/ai_data/datasets/syntax_node_error/clean/b_divzero_clean_1.json"
 
     data = None
     with open(path, encoding="utf-8") as file:
@@ -32,18 +32,20 @@ def main():
     #     data2 = json.load(file)
 
     ## Obtenir le buffer pour le fichier zip de code
-    code_files = engine.get_code_files(data)
+    # code_files = engine.get_code_files(data)
 
-    # Transformer le buffer en fichier .zip
-    output_path = f"./core/data/generated_test.zip"
-    with open(output_path, "wb") as out_file:
-        out_file.write(code_files.getvalue())
+    # # Transformer le buffer en fichier .zip
+    # output_path = f"./core/data/generated_test.zip"
+    # with open(output_path, "wb") as out_file:
+    #     out_file.write(code_files.getvalue())
 
     # # Obtenir le buffer contenant l'image demandée
     # bitmap_buffer = engine.generate_bitmap(data, "3")
     # debug(bitmap_buffer)
 
-    # engine.train_ai((data, data2))
+    engine.train_ai()
+
+    print(engine.predict(data))
 
 def debug(bitmap_buffer:BytesIO):
     bitmap_buffer.seek(0)

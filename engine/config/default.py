@@ -4,10 +4,10 @@ import PySide6
 from __feature__ import snake_case, true_property # type: ignore[import-not-found]
 
 from PySide6.QtCore import (Qt, QObject, QMargins, QRect, QPoint, QSize)
-from PySide6.QtGui import (QColor, QFont, QPalette)
+from PySide6.QtGui import (QColor, QFont)
 from PySide6.QtWidgets import (QWidget, QPushButton, QAbstractButton, QLayout, QBoxLayout, QVBoxLayout, QHBoxLayout,
                                QFrame, QLabel, QSizePolicy, QLineEdit, QCheckBox, QAbstractSlider, QSlider, QGroupBox, 
-                               QComboBox, QAbstractSpinBox, QSpinBox, QProgressBar, QTextEdit, QAbstractScrollArea, QRadioButton, QDoubleSpinBox)
+                               QComboBox, QAbstractSpinBox, QSpinBox, QProgressBar, QTextEdit, QRadioButton, QDoubleSpinBox)
 
 from shibokensupport import feature # type: ignore[import-not-found]
 feature.set_selection(feature.snake_case | feature.true_property)
@@ -21,7 +21,7 @@ class DefaultConfig(BaseConfig):
     def __init__(self):
         self.__objects_implemented = (QObject, QWidget, QAbstractButton, QPushButton, QHBoxLayout, QLayout, QBoxLayout, QVBoxLayout, QFrame, 
                                       QLabel, QLineEdit, QCheckBox, QAbstractSlider, QSlider, QGroupBox, QComboBox, QAbstractSpinBox, QSpinBox, QProgressBar,
-                                      QTextEdit, QFrame, QRadioButton, QDoubleSpinBox, QAbstractScrollArea)
+                                      QTextEdit, QFrame, QRadioButton, QDoubleSpinBox)
         
         self.__primitives_types = (int, str, bool, float)
         

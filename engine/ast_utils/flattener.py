@@ -31,9 +31,10 @@ class ASTFlattener():
         
         elif isinstance(obj, list):
             if obj:
-                list_id = self._add_node(f"AST_{obj_type}", parent_id)
+                # list_id = self._add_node(f"AST_{obj_type}", parent_id)
                 for item in obj:
-                    self._traverse(item, list_id, obj_type)
+                    # self._traverse(item, list_id, obj_type)
+                    self._traverse(item, parent_id, obj_type)
 
         elif obj is not None or (obj is None and obj_type == "value"):
             self._add_node(f"AST_{obj_type}", parent_id, obj)

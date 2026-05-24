@@ -1,0 +1,223 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-02-26T22:30:30.000-Z",
+        "project_name": "hello_world",
+        "components": [
+            {
+                "id": "1",
+                "type": "HelloWorldApp",
+                "category": "custom",
+                "name": "app",
+                "module": "PySide6.QtCore",
+                "variable": [
+                    {
+                        "id": "11",
+                        "name": "label",
+                        "value": {
+                            "type": "id",
+                            "value": "9"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "12",
+                        "name": "button",
+                        "value": {
+                            "type": "id",
+                            "value": "3"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "4",
+                        "name": "text_visible",
+                        "value": {
+                            "type": "bool",
+                            "value": false
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "5",
+                        "name": "text",
+                        "value": {
+                            "type": "tuple",
+                            "value": [
+                                {
+                                    "type": "str",
+                                    "value": ""
+                                },
+                                {
+                                    "type": "str",
+                                    "value": "Hello World"
+                                }
+                            ]
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "6",
+                        "name": "button_text",
+                        "value": {
+                            "type": "tuple",
+                            "value": [
+                                {
+                                    "type": "str",
+                                    "value": "Afficher"
+                                },
+                                {
+                                    "type": "str",
+                                    "value": "Cacher"
+                                }
+                            ]
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "child": [
+                    "7"
+                ],
+                "properties": [
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 0,
+                                "name": "x"
+                            },
+                            {
+                                "type": "int",
+                                "value": 0,
+                                "name": "y"
+                            },
+                            {
+                                "type": "int",
+                                "value": 1000,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 1000,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "focus_policy",
+                        "type": "enum",
+                        "namespace": [
+                                "PySide6.QtCore",
+                                "Qt",
+                                "FocusPolicy"
+                            ],
+                        "value": "ClickFocus"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "2",
+                        "name": "change_text",
+                        "params": ["self"],
+                        "code": [
+                            "self.text_visible = not self.text_visible",
+                            "self.button.text = self.button_text[self.text_visible]",
+                            "self.label.text = self.text[self.text_visible]",
+                            "self.button_text[self.text_visible]"
+                        ],
+                        "is_intern": false
+                    }
+                ]
+            },
+            {
+                "id": "7",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "name": "layout",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [
+                    "9",
+                    "3"
+                ],
+                "properties": [],
+                "function": []
+            },
+            {
+                "id": "9",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": ["PySide6.QtCore", "Qt", "AlignmentFlag"],
+                        "value": {
+                            "exclusive": {
+                                "AlignHorizontal": "AlignLeft",
+                                "AlignVertical": "AlignTop"
+                            },
+                            "non_exclusive": []
+                        }
+                        
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "3",
+                "type": "QPushButton",
+                "category": "widget",
+                "name": "button",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Afficher"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "10",
+                        "name": "clicked",
+                        "is_intern": true,
+                        "code": ""
+                    }
+                ]
+            }
+        ],
+        "links": [
+            {
+                "id": "l_1",
+                "source": "10",
+                "target": "2",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

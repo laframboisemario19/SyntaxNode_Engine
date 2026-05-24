@@ -1,0 +1,297 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-03-30T11:00:00.000-Z",
+        "project_name": "syntax_node_integration_test",
+        "components": [
+            {
+                "id": "1",
+                "type": "IntegrationApp",
+                "category": "custom",
+                "name": "app",
+                "module": "PySide6.QtCore",
+                "variable": [
+                    {
+                        "id": "101",
+                        "name": "title_label",
+                        "value": {
+                            "type": "id",
+                            "value": "9"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "102",
+                        "name": "separator_frame",
+                        "value": {
+                            "type": "id",
+                            "value": "13"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "103",
+                        "name": "counter_label",
+                        "value": {
+                            "type": "id",
+                            "value": "14"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "104",
+                        "name": "action_btn",
+                        "value": {
+                            "type": "id",
+                            "value": "3"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "105",
+                        "name": "click_count",
+                        "value": {
+                            "type": "int",
+                            "value": 0
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "106",
+                        "name": "is_active",
+                        "value": {
+                            "type": "bool",
+                            "value": false
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "child": [
+                    "7"
+                ],
+                "properties": [
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "x"
+                            },
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "y"
+                            },
+                            {
+                                "type": "int",
+                                "value": 400,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 300,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "SyntaxNode - Test d'intégration"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "2",
+                        "name": "on_action_toggled",
+                        "params": ["self", "checked"],
+                        "code": [
+                            "self.is_active = checked",
+                            "self.click_count += 1",
+                            "self.counter_label.text = f'Clics : {self.click_count} - Actif : {self.is_active}'",
+                            "self.action_btn.text = 'Désactiver' if self.is_active else 'Activer'"
+                        ],
+                        "is_intern": false
+                    }
+                ]
+            },
+            {
+                "id": "7",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [
+                    "9",
+                    "13",
+                    "14",
+                    "3"
+                ],
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 15
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "9",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "title_label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Validation du générateur AST PySide6"
+                    },
+                    {
+                        "name": "word_wrap",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
+                        "name": "margin",
+                        "type": "int",
+                        "value": 10
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": ["PySide6.QtCore", "Qt", "AlignmentFlag"],
+                        "value": {
+                            "exclusive":{
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignTop"
+                            },
+                            "non_exclusive":[]
+                        }
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "13",
+                "type": "QFrame",
+                "category": "widget",
+                "name": "separator_frame",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "frame_shape",
+                        "type": "enum",
+                        "namespace": ["PySide6.QtWidgets", "QFrame", "Shape"],
+                        "value": "HLine"
+                    },
+                    {
+                        "name": "frame_shadow",
+                        "type": "enum",
+                        "namespace": ["PySide6.QtWidgets", "QFrame", "Shadow"],
+                        "value": "Sunken"
+                    },
+                    {
+                        "name": "line_width",
+                        "type": "int",
+                        "value": 2
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "14",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "counter_label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Clics : 0 - Actif : False"
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": ["PySide6.QtCore", "Qt", "AlignmentFlag"],
+                        "value": {
+                            "exclusive":{
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignVCenter"
+                            },
+                            "non_exclusive":[]
+                        }
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "3",
+                "type": "QPushButton",
+                "category": "widget",
+                "name": "action_btn",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Activer"
+                    },
+                    {
+                        "name": "checkable",
+                        "type": "bool",
+                        "value": true
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "20",
+                        "name": "toggled",
+                        "is_intern": true,
+                        "code": ""
+                    }
+                ]
+            }
+        ],
+        "links": [
+            {
+                "id": "L1",
+                "source": "20",
+                "target": "2",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

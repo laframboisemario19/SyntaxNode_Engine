@@ -1,0 +1,342 @@
+[
+    {
+        "id_project": "3",
+        "id_owner": "1",
+        "last_update": "2026-03-30T12:00:00.000-Z",
+        "project_name": "syntax_node_player_profile",
+        "components": [
+            {
+                "id": "1",
+                "type": "IntegrationApp",
+                "category": "custom",
+                "name": "app",
+                "module": "PySide6.QtCore",
+                "variable": [
+                    {
+                        "id": "101",
+                        "name": "name_input",
+                        "value": { "type": "id", "value": "5" },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "102",
+                        "name": "volume_slider",
+                        "value": { "type": "id", "value": "7" },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "103",
+                        "name": "advanced_cb",
+                        "value": { "type": "id", "value": "6" },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "104",
+                        "name": "submit_btn",
+                        "value": { "type": "id", "value": "8" },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "105",
+                        "name": "status_label",
+                        "value": { "type": "id", "value": "9" },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "child": [
+                    "2"
+                ],
+                "properties": [
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 100, "name": "x" },
+                            { "type": "int", "value": 100, "name": "y" },
+                            { "type": "int", "value": 450, "name": "width" },
+                            { "type": "int", "value": 300, "name": "height" }
+                        ]
+                    },
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "Configuration du Profil"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "F1",
+                        "name": "on_advanced_toggled",
+                        "params": ["self", "checked"],
+                        "code": [
+                            "self.volume_slider.enabled = checked",
+                            "if checked:",
+                            "    self.name_input.placeholder_text = 'Chat activé, entrez un pseudo...'",
+                            "else:",
+                            "    self.name_input.placeholder_text = 'Chat désactivé...'"
+                        ],
+                        "is_intern": false
+                    },
+                    {
+                        "id": "F2",
+                        "name": "on_submit_clicked",
+                        "params": ["self", "checked"],
+                        "code": [
+                            "pseudo = self.name_input.text if self.name_input.text else 'Anonyme'",
+                            "vol = self.volume_slider.value if self.volume_slider.enabled else 'N/A'",
+                            "self.status_label.text = f'Profil sauvegardé : {pseudo} (Volume : {vol})'"
+                        ],
+                        "is_intern": false
+                    }
+                ]
+            },
+            {
+                "id": "2",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [
+                    "3",
+                    "6",
+                    "7",
+                    "8",
+                    "9"
+                ],
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 15
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 20, "name": "left" },
+                            { "type": "int", "value": 20, "name": "top" },
+                            { "type": "int", "value": 20, "name": "right" },
+                            { "type": "int", "value": 20, "name": "bottom" }
+                        ]
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "3",
+                "type": "QHBoxLayout",
+                "category": "layout",
+                "name": "form_layout",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [
+                    "4",
+                    "5"
+                ],
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "4",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "name_label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Pseudo :"
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "5",
+                "type": "QLineEdit",
+                "category": "widget",
+                "name": "name_input",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Chat désactivé..."
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 20
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "6",
+                "type": "QCheckBox",
+                "category": "widget",
+                "name": "advanced_cb",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Activer le chat vocal"
+                    },
+                    {
+                        "name": "checked",
+                        "type": "bool",
+                        "value": false
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "S1",
+                        "name": "toggled",
+                        "is_intern": true,
+                        "code": ""
+                    }
+                ]
+            },
+            {
+                "id": "7",
+                "type": "QSlider",
+                "category": "widget",
+                "name": "volume_slider",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "orientation",
+                        "type": "enum",
+                        "namespace": ["PySide6.QtCore", "Qt", "Orientation"],
+                        "value": "Horizontal"
+                    },
+                    {
+                        "name": "enabled",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "minimum",
+                        "type": "int",
+                        "value": 0
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 100
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 50
+                    }
+                ],
+                "function": []
+            },
+            {
+                "id": "8",
+                "type": "QPushButton",
+                "category": "widget",
+                "name": "submit_btn",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Sauvegarder"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "S2",
+                        "name": "clicked",
+                        "is_intern": true,
+                        "code": ""
+                    }
+                ]
+            },
+            {
+                "id": "9",
+                "type": "QLabel",
+                "category": "widget",
+                "name": "status_label",
+                "variable": [],
+                "inheritance": [],
+                "module": "PySide6.QtWidgets",
+                "child": [],
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "En attente de sauvegarde..."
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": ["PySide6.QtCore", "Qt", "AlignmentFlag"],
+                        "value": {
+                            "exclusive":{
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignVCenter"
+                            },
+                            "non_exclusive":[]
+                        }
+                    }
+                ],
+                "function": []
+            }
+        ],
+        "links": [
+            {
+                "id": "L1",
+                "source": "S1",
+                "target": "F1",
+                "type": "signal_slot"
+            },
+            {
+                "id": "L2",
+                "source": "S2",
+                "target": "F2",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]
