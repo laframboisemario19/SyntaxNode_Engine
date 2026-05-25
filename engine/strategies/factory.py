@@ -16,13 +16,27 @@ from .base import LanguageStrategy, LibraryStrategy, ImageGeneratorStrategy
 from ..error import SyntaxNodeError, StrategyNotFoundError
 
 class StrategyType(Enum):
-    """Énumération des types de stratégies disponibles dans l'usine."""
+    """
+    Énumération des types de stratégies disponibles dans l'usine.
+
+    Attributes:
+        LANGUAGE: Stratégie de génération de code et d'orchestration de rendu.
+        LIBRARY: Stratégie gérant les métadonnées d'une bibliothèque graphique.
+        IMG_GENERATOR: Stratégie de rendu visuel offscreen pour les aperçus.
+    """
     LANGUAGE = 1
     LIBRARY = 2
     IMG_GENERATOR = 3
 
 class ConfigType(Enum):
-    """Énumération des niveaux de configuration pour les bibliothèques."""
+    """
+    Énumération des niveaux de configuration pour les bibliothèques graphiques.
+
+    Attributes:
+        TEST: Configuration minimale destinée aux tests et au développement.
+        DEFAULT: Configuration standard pour un usage en production.
+        EXTENDED: Configuration étendue avec des fonctionnalités supplémentaires.
+    """
     TEST = 1
     DEFAULT = 2
     EXTENDED = 3
@@ -30,6 +44,19 @@ class ConfigType(Enum):
 class StrategyFactory:
     """
     Classe utilitaire statique agissant comme usine de stratégies.
+
+    Implémente le patron de conception Fabrique (Factory) combiné au patron
+    Stratégie pour centraliser l'instanciation des stratégies de langage,
+    de bibliothèque graphique et de génération d'images.
+
+    L'ajout d'un nouveau langage ou d'une nouvelle bibliothèque ne nécessite
+    que l'enregistrement de la classe correspondante dans `_strategies`.
+
+    Attributes:
+        _strategies (dict): Registre des classes de stratégies disponibles,
+            organisé par type et par nom.
+        _configurations (dict): Registre des classes de configuration
+            disponibles, organisé par `ConfigType`.
     """
     _strategies = {
         StrategyType.LANGUAGE : {

@@ -3,7 +3,13 @@ Module définissant le moteur principal de SyntaxNode.
 
 Ce module contient la classe `SyntaxNodeEngine`, qui agit comme le point central
 pour gérer l'état et coordonner les stratégies liées aux langages de programmation 
-et aux bibliothèques d'interface graphique.
+et aux bibliothèques d'interface graphique. Il sert également de pont vers le modèle
+PyTorch pour l'analyse statique du code utilisateur.
+
+Classes
+-------
+    SyntaxNodeEngine: Moteur principal orchestrant les stratégies de génération.
+    PredictionValue: Énumération des seuils de décision pour l'analyse statique.
 """
 
 from typing import Any, Self, Dict, List, Tuple
@@ -15,6 +21,16 @@ from .error import StrategyNotFoundError
 from .validators import JsonValidator
 
 class PredictionValue(Enum):
+    """
+    Énumération des seuils de décision pour l'analyse statique du code utilisateur.
+
+    Ces valeurs sont utilisées par le moteur pour déterminer si le code généré
+    est considéré sûr ou non selon le modèle PyTorch.
+
+    Attributes:
+        SAFE (float): Seuil indiquant que le code est considéré sûr (0).
+        UNSAFE (float): Seuil indiquant que le code est considéré non sûr (0.4).
+    """
     SAFE = 0
     UNSAFE = 0.4
 
@@ -24,7 +40,8 @@ class SyntaxNodeEngine():
 
     Cette classe utilise le patron de conception Stratégie pour découpler
     la logique de l'application des implémentations spécifiques aux langages
-    et aux bibliothèques.
+    et aux bibliothèques. Elle sert également de pont vers le modèle PyTorch
+    pour l'entraînement et l'analyse statique du code utilisateur.
 
     Attributes:
         _current_lang_strategy: L'instance de la stratégie du langage actuellement sélectionné.
@@ -32,7 +49,7 @@ class SyntaxNodeEngine():
     Examples:
         >>> engine = SyntaxNodeEngine()
         >>> engine.set_language("python")
-        >>> engine.set_lib("qt", ConfigType.TEST)
+        >>> engine.set_lib("qt", ConfigType.DEFAULT)
         >>> print(engine.current_lang)
         python
     """
@@ -155,6 +172,41 @@ class SyntaxNodeEngine():
         return self._current_lib_strategy.get_meta_objects()
     
     def validate_data(self:Self, data:List[Dict[str, Any]]) -> bool:
+        """
+        Valide les données du graphe nodal sur trois niveaux.
+
+        Vérifie la conformité JSON des données, la validité de l'AST généré,
+        et effectue une analyse statique via le modèle PyTorch pour détecter
+        du code potentiellement non sûr.
+
+        Args:
+            data (List[Dict[str, Any]]): Une liste de dictionnaires représentant
+                les nœuds et les connexions du graphe configuré par l'utilisateur.
+
+        Returns:
+            bool: True si les données sont valides et le code considéré sûr,
+                False sinon.
+
+        Raises:
+            StrategyNotFoundError: Si aucune bibliothèque n'a été préalablement définie.
+            TypeJsonFormatError: Si le type des données passées est invalide.
+            RootError: Si le projet ne respecte pas la structure de composants requise.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
+
+        Examples:
+        >>> try:
+        ...     is_valid = engine.validate_data(data)
+        ... except ErrorContainer as e:
+        ...     for error_details_container in e.error_list:
+        ...         for detail in error_details_container.error_detail_list:
+        ...             print(f"Erreur : {detail.msg}")
+        ...             print(f"Emplacement : {' -> '.join(detail.loc)}")
+        ...             if detail.focus_id:
+        ...                 print(f"Id du composant à surligner : {detail.focus_id}")
+        """
         json_valid = JsonValidator.validate_data(data)
         metadata = self._current_lib_strategy.metadata
         ast_valid = self._current_lang_strategy.validate_ast(self.current_lib, data, metadata)
@@ -182,6 +234,12 @@ class SyntaxNodeEngine():
 
         Raises:
             StrategyNotFoundError: Si aucune bibliothèque n'a été préalablement définie.
+            TypeJsonFormatError: Si le type des données passées est invalide.
+            RootError: Si le projet ne respecte pas la structure de composants requise.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
 
         Examples:
             >>> engine = SyntaxNodeEngine()
@@ -219,6 +277,12 @@ class SyntaxNodeEngine():
 
         Raises:
             StrategyNotFoundError: Si aucune bibliothèque n'a été préalablement définie.
+            TypeJsonFormatError: Si le type des données passées est invalide.
+            RootError: Si le projet ne respecte pas la structure de composants requise.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
 
         Examples:
             >>> engine = SyntaxNodeEngine()
@@ -240,13 +304,41 @@ class SyntaxNodeEngine():
         return self._current_lang_strategy.generate_bitmap(self.current_lib, strategy, data, metadata, target_id)
 
     def train_ai(self:Self) -> None:
+        """
+        Déclenche l'entraînement du modèle PyTorch pour l'analyse statique.
+
+        L'acquisition des données d'entraînement est gérée à l'interne par une
+        factory dédiée. Un langage et une bibliothèque doivent obligatoirement
+        être définis avant d'appeler cette méthode.
+
+        Raises:
+            StrategyNotFoundError: Si aucune bibliothèque n'a été préalablement définie.
+        """
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         
         metadata = self._current_lib_strategy.metadata
         self._current_lang_strategy.train_ai(self.current_lib, metadata)
 
-    def _predict(self:Self, data) -> float:
+    def _predict(self:Self, data: List[Dict[str, Any]]) -> float:
+        """
+        Analyse statique du code utilisateur via le modèle PyTorch.
+
+        Cette méthode est destinée à être appelée par `validate_data` et non
+        directement par l'utilisateur. Si le modèle n'est pas encore entraîné,
+        l'entraînement est effectué silencieusement à l'interne avant la prédiction.
+
+        Args:
+            data (List[Dict[str, Any]]): Une liste de dictionnaires représentant
+                les nœuds et les connexions du graphe configuré par l'utilisateur.
+
+        Returns:
+            bool: True si le code est considéré sûr selon le seuil de `PredictionValue.SAFE`,
+                False sinon.
+
+        Raises:
+            StrategyNotFoundError: Si aucune bibliothèque n'a été préalablement définie.
+        """
         if not self._current_lib_strategy:
             raise StrategyNotFoundError("Aucune librairie n'a été sélectionnée")
         

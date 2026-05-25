@@ -45,7 +45,7 @@ class LanguageStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_code_files(self:Self, data:List[Dict[str, Any]], metadata:Dict):
+    def get_code_files(self:Self, data:List[Dict[str, Any]], metadata:Dict[str, Any]):
         """
         Orchestre la création de l'AST et génère les fichiers sources compressés.
 
@@ -57,7 +57,11 @@ class LanguageStrategy(ABC):
             BytesIO: Un flux d'octets contenant l'archive (ex: .zip) des fichiers générés.
             
         Raises:
-            SyntaxNodeError: Si la génération de l'arbre syntaxique échoue.
+            SyntaxNodeError: Si la génération de l'AST échoue.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
         """
         pass
 
@@ -82,6 +86,65 @@ class LanguageStrategy(ABC):
 
         Returns:
             BytesIO: Le flux de données de l'image (ex: PNG) prête à l'affichage.
+
+        Raises:
+            SyntaxNodeError: Si la génération de l'AST échoue.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
+        """
+        pass
+
+    @abstractmethod
+    def validate_ast(self:Self, library:str, data:List[Dict[str, Any]], metadata: Dict[str, Any]) -> bool:
+        """
+        Valide la cohérence de l'AST généré à partir des données du graphe nodal.
+
+        Args:
+            library (str): Le nom de la bibliothèque graphique cible.
+            data (List[Dict[str, Any]]): Le graphe nodal configuré par l'utilisateur.
+            metadata (Dict[str, Any]): Les métadonnées de la bibliothèque graphique.
+
+        Returns:
+            bool: True si l'AST généré est valide, False sinon.
+
+        Raises:
+            SyntaxNodeError: Si la génération de l'AST échoue.
+            ErrorDetailsContainer: Si les données contiennent des erreurs de validation structurelle.
+            ErrorContainer: Si plusieurs groupes d'erreurs de validation sont détectés.
+            FatalError: Si une fonction potentiellement malveillante est détectée dans le code utilisateur.
+            IllegalImportError: Si un module requis par un composant ne peut pas être importé.
+        """
+        pass
+    
+    @abstractmethod
+    def train_ai(self:Self, library:str, metadata) -> None:
+        """
+        Déclenche l'entraînement du modèle d'analyse statique.
+
+        L'acquisition des données d'entraînement est gérée à l'interne par une
+        factory dédiée.
+
+        Args:
+            library (str): Le nom de la bibliothèque graphique cible.
+            metadata: Les métadonnées de la bibliothèque graphique.
+        """
+        pass
+
+    @abstractmethod
+    def predict(self:Self, library:str, data: List[Dict[str, Any]], metadata: Dict[str, Any]):
+        """
+        Effectue une prédiction sur le code utilisateur via le modèle d'analyse statique.
+
+        Args:
+            library (str): Le nom de la bibliothèque graphique cible.
+            data (List[Dict[str, Any]]): Le graphe nodal configuré par l'utilisateur.
+            metadata (Dict[str, Any]): Les métadonnées de la bibliothèque graphique.
+
+        Returns:
+            float: Un score indiquant si le code est considéré sûr ou non,
+                à comparer avec les seuils de `PredictionValue`.
         """
         pass
 

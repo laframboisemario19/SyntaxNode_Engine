@@ -26,13 +26,13 @@ def main():
 
     # engine.validate_data(data)
 
-    # path = "./core/data/projet_test1_malsain.json"
-    # data2 = None
-    # with open(path, encoding="utf-8") as file:
-    #     data2 = json.load(file)
+    path = "./core/data/projet_test1_malsain.json"
+    data2 = None
+    with open(path, encoding="utf-8") as file:
+        data2 = json.load(file)
 
-    ## Obtenir le buffer pour le fichier zip de code
-    # code_files = engine.get_code_files(data)
+    # Obtenir le buffer pour le fichier zip de code
+    code_files = engine.get_code_files(data)
 
     # # Transformer le buffer en fichier .zip
     # output_path = f"./core/data/generated_test.zip"
