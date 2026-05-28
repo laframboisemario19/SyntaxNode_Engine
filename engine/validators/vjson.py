@@ -104,6 +104,7 @@ class Component(BaseModel):
     id: str
     type: str
     category: str
+    position: Optional[Dict[str, float]]
     name: str
     module: str
     child: List[str]
