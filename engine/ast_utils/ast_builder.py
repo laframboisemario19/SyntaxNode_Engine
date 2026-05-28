@@ -14,7 +14,7 @@ from pathlib import Path
 import ast
 from typing import Self, Dict, Any, List
 
-DEBUG_AST_PATH = Path(__file__).parent.parent / "data" / "debug_ast.txt"
+DEBUG_AST_PATH = Path(__file__).parent.parent.parent / "data" / "debug_ast.txt"
 
 class ASTBuilder(ABC):
     """

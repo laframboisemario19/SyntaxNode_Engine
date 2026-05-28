@@ -14,7 +14,7 @@ def main():
     engine.set_lib("qt", ConfigType.DEFAULT)
 
     # # ## Obtenir les metadata
-    meta_objects = engine.get_meta_objects()
+    # meta_objects = engine.get_meta_objects()
 
     path = "./core/data/projet_test5.json"
 
@@ -26,10 +26,10 @@ def main():
 
     # engine.validate_data(data)
 
-    path = "./core/data/projet_test1_malsain.json"
-    data2 = None
-    with open(path, encoding="utf-8") as file:
-        data2 = json.load(file)
+    # path = "./core/data/projet_test1_malsain.json"
+    # data2 = None
+    # with open(path, encoding="utf-8") as file:
+    #     data2 = json.load(file)
 
     # Obtenir le buffer pour le fichier zip de code
     code_files = engine.get_code_files(data)
@@ -43,9 +43,9 @@ def main():
     # bitmap_buffer = engine.generate_bitmap(data, "3")
     # debug(bitmap_buffer)
 
-    engine.train_ai()
+    # engine.train_ai()
 
-    print(engine._predict(data))
+    # print(engine._predict(data))
 
 def debug(bitmap_buffer:BytesIO):
     bitmap_buffer.seek(0)
