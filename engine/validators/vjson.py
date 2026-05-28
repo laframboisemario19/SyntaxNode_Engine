@@ -441,7 +441,7 @@ class JsonValidator:
                 error_path = comp_loc
                 error_msg = f"Tous les éléments doivent être connectés de près ou de loin au composant principal"
                 focus_id = comp_id
-                error_details_list.append(ErrorDetails(error_path, error_msg, focus_id))
+                error_details_list.append(ErrorDetails(error_path, error_msg, focus_id, error_msg))
 
         if error_details_list:
             error = LinksError(error_details_list)
