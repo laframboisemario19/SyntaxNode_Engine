@@ -44,7 +44,7 @@ class DefaultConfig(BaseConfig):
         self.__params_implemented = ("object_name", "text", "placeholder_text", "title", "checkable", "checked", "current_text", "current_index",
             "minimum", "maximum", "value", "single_step", "prefix", "suffix", "text_visible", "format", "accepts_rich_text", "text_format", 
             "text_interaction_flags", "word_wrap", "scaled_contents", "alignment", "indent", "margin", "echo_mode", "read_only", "max_length",
-            "line_wrap_mode", "horizontal_scroll_bar_policy", "geometry", "size", "minimum_size", "maximum_size", "minimum_width", "minimum_height",
+            "line_wrap_mode", "horizontal_scroll_bar_policy", "geometry", "minimum_size", "maximum_size", "minimum_width", "minimum_height",
             "maximum_width", "maximum_height", "size_policy", "style_sheet", "font", "frame_shape", "frame_shadow", "line_width", "orientation",
             "enabled", "visible", "focus_policy", "context_menu_policy", "layout_direction", "window_opacity", "window_title", "spacing", "contents_margins", 
             "size_constraint")

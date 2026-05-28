@@ -426,7 +426,7 @@ class JsonValidator:
                     error_msg = f"Dépendance circulaire"
                     user_msg = f"Une dépendance circulaire est causée par les composants : {sequence[-1]}, {child["child"]}"
                     focus_id = (sequence[-1], child["child"])
-                    error_details_list.append(ErrorDetails(error_path, error_msg, focus_id))
+                    error_details_list.append(ErrorDetails(error_path, error_msg, focus_id, user_msg))
                 else:
                     new_seq = [*sequence, child["child"]]
                     sequences.update(_recursive(children_tree, new_seq, child["child"]))
@@ -479,7 +479,7 @@ class JsonValidator:
                         error_msg = f"widget {comp_id} ne peut pas être parent direct de {child_id}, car il est aussi un widget"
                         focus_id = (comp_id, child_id)
                         user_msg = f"Le widget {comp_id} ne peut pas être parent direct de {child_id}, car il est aussi un widget"
-                        error_list.append(ErrorDetails(error_path, error_msg, focus_id))
+                        error_list.append(ErrorDetails(error_path, error_msg, focus_id, user_msg))
 
         if error_list:
             error = QtStructureError(error_list)

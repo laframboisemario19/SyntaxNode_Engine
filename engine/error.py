@@ -52,11 +52,11 @@ class ErrorDetails():
             dans le graphe nodal, permettant de les surligner dans l'interface visuelle.
         user_msg (str): Le message destiné à l'utilisateur final.
     """
-    def __init__(self:Self, loc:List[str], msg: str, focus_id:str|Tuple[str]|None = None, user_msg:str = "") -> None:
+    def __init__(self:Self, loc:List[str], msg: str, focus_id:str|Tuple[str]|None = None, user_msg:str = "Une erreur inattendue est survenue. Veuillez contacter le soutien technique.") -> None:
         self.loc = loc
         self.msg = msg
         self.focus_id = focus_id
-        self.user_msg = "Erreur inconnu"
+        self.user_msg = user_msg
 
 class ErrorDetailsContainer(SyntaxNodeError):
     """
@@ -86,12 +86,20 @@ class ErrorDetailsContainer(SyntaxNodeError):
         """
         self.error_detail_list:List[ErrorDetails] = error_detail_list
 
-    def __str__(self:Self):
+    def __repr__(self:Self):
         message = ""
         for error_detail in self.error_detail_list:
             error_path = " -> ".join(error_detail.loc)
             error_msg = error_detail.msg
             message += f"{self.__class__.__name__} : Erreur à l'emplacement [{error_path}] : {error_msg}\n"
+        return message
+    
+    def __str__(self:Self):
+        message = ""
+        for error_detail in self.error_detail_list:
+            focus_id = error_detail.focus_id
+            error_msg = error_detail.user_msg
+            message += f"{self.__class__.__name__} : Erreur à l'emplacement [{focus_id}] : {error_msg}\n"
         return message
     
 class ErrorContainer(SyntaxNodeError):
@@ -122,6 +130,12 @@ class ErrorContainer(SyntaxNodeError):
                 de catégories différentes.
         """
         self.error_list:List[ErrorDetailsContainer] = error_list
+    
+    def __repr__(self:Self):
+        message = ""
+        for error in self.error_list:
+            message += repr(error)        
+        return message
     
     def __str__(self:Self):
         message = ""
