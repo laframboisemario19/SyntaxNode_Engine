@@ -128,7 +128,7 @@ class QtStrategy(LibraryStrategy):
 
         serialized_dict = mdo.organize_dict(self.__all_meta_objects, "direct_parent")
         serialized_dict = mds.restructure_dict(serialized_dict)
-        self.__create_data_file(serialized_dict, "./data/all_meta_objects.json")
+        # self.__create_data_file(serialized_dict, "./core/data/all_meta_objects.json")
         return serialized_dict
     
     def update_meta_objects(self:Self) -> Dict[str, Any]:

@@ -14,7 +14,7 @@ def main():
     engine.set_lib("qt", ConfigType.DEFAULT)
 
     # # ## Obtenir les metadata
-    # meta_objects = engine.get_meta_objects()
+    meta_objects = engine.get_meta_objects()
 
     path = "./core/data/projet_test5.json"
 

@@ -127,7 +127,7 @@ class QtMetadataAdapter(MetadataAdapter):
     def __process_primitive_type(self, q_meta_property:QMetaProperty, property_type:type) -> dict[str,Any]:
         property_type_name = property_type.__name__
         if not self._is_abstract :
-            default_value = q_meta_property.read(self._obj)
+            default_value = q_meta_property.read(self._obj) if q_meta_property.name() != "visible" else True
             return {"type":property_type_name, "default":default_value}
         else:
             return {"type":property_type_name}
