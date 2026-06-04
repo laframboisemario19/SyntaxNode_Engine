@@ -8,7 +8,7 @@
             {
                 "id": "n_0",
                 "type": "HelloWorldApp",
-                "category": "dynamic",
+                "category": "custom",
                 "position": {
                     "x": 260,
                     "y": 160
@@ -153,7 +153,7 @@
             {
                 "id": "n_1",
                 "type": "QVBoxLayout",
-                "category": "dynamic",
+                "category": "layout",
                 "position": {
                     "x": 523.2048668387783,
                     "y": 288.7156242919207
@@ -188,7 +188,7 @@
             {
                 "id": "n_2",
                 "type": "QLabel",
-                "category": "dynamic",
+                "category": "widget",
                 "position": {
                     "x": 874.4480200029566,
                     "y": 213.57057444753434
@@ -231,7 +231,7 @@
             {
                 "id": "n_3",
                 "type": "QPushButton",
-                "category": "dynamic",
+                "category": "widget",
                 "position": {
                     "x": 855.8345737741508,
                     "y": 451.4540607101277

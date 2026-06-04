@@ -93,7 +93,7 @@ class ASTDirector():
         self._builder.build_main(data_dict)
         self._builder.fix_locations()
 
-        self._builder.print_tree()
+        # self._builder.print_tree()
 
         tree = self._builder.get_ast()
 

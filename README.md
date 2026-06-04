@@ -133,7 +133,7 @@ Le dossier `examples/` contient plusieurs projets prêts à utiliser :
 
 ```python
 import json
-from engine import SyntaxNodeEngine, PredictionValue
+from engine import SyntaxNodeEngine, PredictionValue, SyntaxNodeError
 from engine.strategies import ConfigType
 
 engine = SyntaxNodeEngine()
@@ -145,18 +145,29 @@ with open("examples/hello_world_app/projet1.json") as f:
     data = json.load(f)
 
 # Générer le code (retourne un BytesIO contenant l'archive ZIP)
-zip_buffer = engine.get_code_files(data)
-
-# Extraire et afficher le code généré
-import zipfile, io
-with zipfile.ZipFile(zip_buffer) as z:
-    print(z.read("main_application.py").decode())
+import zipfile
+try:
+    zip_buffer = engine.get_code_files(data)
+    zip_buffer.seek(0)
+    with zipfile.ZipFile(zip_buffer) as z:
+        print(z.read("main_application.py").decode())
+except SyntaxNodeError as e:
+    print(e)       # message utilisateur
+    print(repr(e)) # message développeur
 
 # Valider un schéma sans générer de code
-is_valid, errors = engine.validate_data(data)
+try:
+    engine.validate_data(data)
+except SyntaxNodeError as e:
+    print(e)       # message utilisateur
+    print(repr(e)) # message développeur
 
 # Générer une image de prévisualisation
-bitmap = engine.generate_bitmap(data, target_id="node_id")
+try:
+    bitmap = engine.generate_bitmap(data, target_id="node_id")
+except SyntaxNodeError as e:
+    print(e)       # message utilisateur
+    print(repr(e)) # message développeur
 ```
 
 ### Format d'entrée (JSON)

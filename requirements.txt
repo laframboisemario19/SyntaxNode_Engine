@@ -4,4 +4,5 @@ PySide6_Essentials==6.10.2
 shiboken6==6.10.2
 pydantic==2.13.4
 torch
+numpy
 Pillow
