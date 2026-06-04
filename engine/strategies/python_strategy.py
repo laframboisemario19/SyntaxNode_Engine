@@ -16,7 +16,7 @@ from io import BytesIO
 
 from .base import LanguageStrategy, ImageGeneratorStrategy
 from ..ast_utils import BuilderFactory, ASTDirector, ASTFlattener
-from ..generator import CodeGenerator
+from ..utils import CodeGenerator
 from ..static_analyser import DatasetFactory, TrainingSource, BaseDataSet, PyTorchModel
 
 SN_ERROR_MODEL_PATH = Path(__file__).parent.parent.parent / "ai_data" / "model" / "sn_error.pt"
