@@ -1,0 +1,668 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-05-26T23:02:33.961Z",
+        "project_name": "PersonnageRPG",
+        "components": [
+            {
+                "id": "n_0",
+                "type": "IntegrationApp",
+                "category": "custom",
+                "position": {
+                    "x": 50.696392768781834,
+                    "y": -93.14422766478415
+                },
+                "name": "app",
+                "variable": [
+                    {
+                        "id": "v_6",
+                        "name": "name_edit",
+                        "value": {
+                            "type": "id",
+                            "value": "n_13"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_7",
+                        "name": "str_spin",
+                        "value": {
+                            "type": "id",
+                            "value": "n_6"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_8",
+                        "name": "agi_spin",
+                        "value": {
+                            "type": "id",
+                            "value": "n_7"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_9",
+                        "name": "total_progress",
+                        "value": {
+                            "type": "id",
+                            "value": "n_9"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_10",
+                        "name": "save_btn",
+                        "value": {
+                            "type": "id",
+                            "value": "n_10"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "size",
+                        "type": "QSize",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 1000,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 520,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "Créateur de Héros RPG"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "QWidget { background-color: #1e1e1e; color: #d4af37; font-family: 'Segoe UI', sans-serif; font-size: 14px; } QGroupBox { border: 2px solid #3a3a3a; border-radius: 6px; margin-top: 15px; font-weight: bold; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top center; padding: 0 8px; color: #e6c555; } QLineEdit, QSpinBox { background-color: #2d2d2d; border: 1px solid #d4af37; border-radius: 4px; padding: 6px; color: #ffffff; } QSpinBox::up-button, QSpinBox::down-button { width: 20px; background-color: #3a3a3a; } QProgressBar { border: 2px solid #3a3a3a; border-radius: 6px; text-align: center; color: #1e1e1e; font-weight: bold; background-color: #2d2d2d; } QProgressBar::chunk { background-color: #d4af37; border-radius: 4px; } QPushButton { background-color: #d4af37; color: #1e1e1e; font-weight: bold; border-radius: 6px; padding: 12px; } QPushButton:hover { background-color: #e6c555; } QPushButton:pressed { background-color: #b5952f; }"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "f_3",
+                        "name": "save_character",
+                        "params": [
+                            "self"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "nom = self.name_edit.text if self.name_edit.text else 'Héros Anonyme'",
+                            "self.window_title = f'{nom} - Validé !'"
+                        ]
+                    },
+                    {
+                        "id": "f_4",
+                        "name": "on_stats_changed",
+                        "params": [
+                            "self",
+                            "value"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "total = self.str_spin.value + self.agi_spin.value",
+                            "self.total_progress.value = total",
+                            "if total > 20:",
+                            "    self.total_progress.format = 'Limite dépassée !'",
+                            "    self.total_progress.style_sheet = 'QProgressBar::chunk { background-color: #cf3a3a; }'",
+                            "else:",
+                            "    self.total_progress.format = '%v / %m pts dépensés'",
+                            "    self.total_progress.style_sheet = 'QProgressBar::chunk { background-color: #d4af37; }'"
+                        ]
+                    }
+                ],
+                "child": [
+                    "n_2"
+                ]
+            },
+            {
+                "id": "n_2",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 313.3309524416878,
+                    "y": -36.57568516986033
+                },
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 20
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_3",
+                    "n_4",
+                    "n_8",
+                    "n_10"
+                ]
+            },
+            {
+                "id": "n_3",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 655.1614716074872,
+                    "y": -149.712770159708
+                },
+                "name": "identity_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Identité"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_12"
+                ]
+            },
+            {
+                "id": "n_12",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 885.269119345812,
+                    "y": -189.31074990615465
+                },
+                "name": "identity_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_13"
+                ]
+            },
+            {
+                "id": "n_13",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 1177.602163828553,
+                    "y": -144.0559159102156
+                },
+                "name": "name_edit",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Nom du héros..."
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_4",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 858.9949493661167,
+                    "y": 62.41926419625641
+                },
+                "name": "stats_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Caractéristiques"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_5"
+                ]
+            },
+            {
+                "id": "n_5",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 1143.8834764831847,
+                    "y": 382.62741699796953
+                },
+                "name": "stats_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 15
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_6",
+                    "n_7"
+                ]
+            },
+            {
+                "id": "n_6",
+                "type": "QSpinBox",
+                "category": "widget",
+                "position": {
+                    "x": 1383.8906191581211,
+                    "y": 525.4629867976522
+                },
+                "name": "str_spin",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QSpinBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "suffix",
+                        "type": "str",
+                        "value": " pts"
+                    },
+                    {
+                        "name": "prefix",
+                        "type": "str",
+                        "value": "Force : "
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 15
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 5
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_4",
+                        "name": "valueChanged",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_7",
+                "type": "QSpinBox",
+                "category": "widget",
+                "position": {
+                    "x": 1544.7018023401645,
+                    "y": 384.0416305603427
+                },
+                "name": "agi_spin",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QSpinBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "suffix",
+                        "type": "str",
+                        "value": " pts"
+                    },
+                    {
+                        "name": "prefix",
+                        "type": "str",
+                        "value": "Agilité : "
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 15
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 5
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_5",
+                        "name": "valueChanged",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_8",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 813.144227664784,
+                    "y": 439.1959594928933
+                },
+                "name": "progress_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Progression Globale"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_11"
+                ]
+            },
+            {
+                "id": "n_11",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 1019.2102448427664,
+                    "y": 607.4873734152918
+                },
+                "name": "progress_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 25,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 15,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_9"
+                ]
+            },
+            {
+                "id": "n_9",
+                "type": "QProgressBar",
+                "category": "widget",
+                "position": {
+                    "x": 1226.6904755831217,
+                    "y": 777.1930009000633
+                },
+                "name": "total_progress",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QProgressBar",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 20
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 10
+                    },
+                    {
+                        "name": "format",
+                        "type": "str",
+                        "value": "%v / %m pts dépensés"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_10",
+                "type": "QPushButton",
+                "category": "widget",
+                "position": {
+                    "x": 620.6244584051394,
+                    "y": 865.060966544099
+                },
+                "name": "save_btn",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QPushButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Valider le personnage"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_6",
+                        "name": "clicked",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            }
+        ],
+        "links": [
+            {
+                "id": "e-n_6-signal-valueChanged-to-n_0-func-f_4",
+                "source": "sig_4",
+                "target": "f_4",
+                "type": "signal_slot"
+            },
+            {
+                "id": "e-n_7-signal-valueChanged-to-n_0-func-f_4",
+                "source": "sig_5",
+                "target": "f_4",
+                "type": "signal_slot"
+            },
+            {
+                "id": "e-n_10-signal-clicked-to-n_0-func-f_3",
+                "source": "sig_6",
+                "target": "f_3",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

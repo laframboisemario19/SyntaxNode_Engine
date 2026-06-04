@@ -1,0 +1,1321 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-05-28T09:56:43.887Z",
+        "project_name": "formulaire",
+        "components": [
+            {
+                "id": "n_0",
+                "type": "ContactFormApp",
+                "category": "custom",
+                "position": {
+                    "x": 14.187434518746329,
+                    "y": 95.36764918125176
+                },
+                "name": "app",
+                "variable": [
+                    {
+                        "id": "v_12",
+                        "name": "first_name_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_7"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_13",
+                        "name": "last_name_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_9"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_14",
+                        "name": "email_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_12"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_15",
+                        "name": "subject_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_16"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_16",
+                        "name": "message_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_24"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_17",
+                        "name": "radio_standard",
+                        "value": {
+                            "type": "id",
+                            "value": "n_19"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_18",
+                        "name": "radio_urgent",
+                        "value": {
+                            "type": "id",
+                            "value": "n_20"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_19",
+                        "name": "submit_btn",
+                        "value": {
+                            "type": "id",
+                            "value": "n_25"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_20",
+                        "name": "radio_feedback",
+                        "value": {
+                            "type": "id",
+                            "value": "n_21"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_21",
+                        "name": "confirm_label",
+                        "value": {
+                            "type": "id",
+                            "value": "n_2"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "app"
+                    },
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "x"
+                            },
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "y"
+                            },
+                            {
+                                "type": "int",
+                                "value": 520,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 680,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "Formulaire de contact"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "QWidget { background-color: #1e1e2e; color: #cdd6f4; font-family: Segoe UI; } QLabel { color: #cdd6f4; } QLineEdit, QTextEdit { background-color: #313244; border: 1px solid #45475a; border-radius: 6px; padding: 6px; color: #cdd6f4; } QLineEdit:focus, QTextEdit:focus { border: 1px solid #89b4fa; } QPushButton { background-color: #89b4fa; color: #1e1e2e; font-weight: bold; border-radius: 6px; padding: 8px 16px; } QPushButton:hover { background-color: #b4befe; } QGroupBox { border: 1px solid #45475a; border-radius: 6px; margin-top: 10px; padding-top: 8px; color: #a6adc8; font-weight: bold; } QGroupBox::title { subcontrol-origin: margin; left: 10px; } QRadioButton { color: #cdd6f4; spacing: 8px; } QRadioButton::indicator:checked { background-color: #89b4fa; border: 2px solid #89b4fa; border-radius: 5px; }"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "f_2",
+                        "name": "on_submit_clicked",
+                        "params": [
+                            "self"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "prenom = self.first_name_input.text if self.first_name_input.text else 'Non renseigné'",
+                            "nom = self.last_name_input.text if self.last_name_input.text else 'Non renseigné'",
+                            "courriel = self.email_input.text if self.email_input.text else 'Non renseigné'",
+                            "sujet = self.subject_input.text if self.subject_input.text else 'Sans sujet'",
+                            "if self.radio_urgent.checked:",
+                            "    priorite = 'Urgent'",
+                            "elif self.radio_feedback.checked:",
+                            "    priorite = 'Rétroaction'",
+                            "else:",
+                            "    priorite = 'Standard'",
+                            "self.confirm_label.text = f'Message envoyé !\\\\n{prenom} {nom} — {courriel}\\\\nSujet : {sujet} [{priorite}]'",
+                            "self.confirm_label.visible = True"
+                        ]
+                    }
+                ],
+                "child": [
+                    "n_1"
+                ]
+            },
+            {
+                "id": "n_1",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 234.7762799105222,
+                    "y": 5.25922811859888
+                },
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "main_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 16
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 30,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 24,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 30,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 24,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_6",
+                    "n_3",
+                    "n_13",
+                    "n_17",
+                    "n_22",
+                    "n_25",
+                    "n_2"
+                ]
+            },
+            {
+                "id": "n_2",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 453.7359375854849,
+                    "y": 852.6498375657795
+                },
+                "name": "confirm_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "confirm_label"
+                    },
+                    {
+                        "name": "visible",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "background-color: #1e3a2f; color: #a6e3a1; border: 1px solid #a6e3a1; border-radius: 6px; padding: 12px; font-size: 13px;"
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "AlignmentFlag"
+                        ],
+                        "value": {
+                            "exclusive": {
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignVCenter"
+                            },
+                            "non_exclusive": []
+                        }
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_3",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 469.78753917473114,
+                    "y": 78.6765110586367
+                },
+                "name": "identity_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "identity_group"
+                    },
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Identité"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_23"
+                ]
+            },
+            {
+                "id": "n_4",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 862.9703126733377,
+                    "y": 260.8787529449628
+                },
+                "name": "subject_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "subject_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 8
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_8",
+                    "n_16"
+                ]
+            },
+            {
+                "id": "n_5",
+                "type": "QHBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 824.0193793907548,
+                    "y": -305.8015405604634
+                },
+                "name": "name_row",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QHBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "name_row"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_11",
+                    "n_7",
+                    "n_26",
+                    "n_9"
+                ]
+            },
+            {
+                "id": "n_6",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 387.24894984834623,
+                    "y": -169.25431757499632
+                },
+                "name": "title_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "title_label"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "font-size: 22px; font-weight: bold; color: #89b4fa; padding-bottom: 4px;"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Nous contacter"
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "AlignmentFlag"
+                        ],
+                        "value": {
+                            "exclusive": {
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignVCenter"
+                            },
+                            "non_exclusive": []
+                        }
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_7",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 1059.5019408610635,
+                    "y": -291.4721193019169
+                },
+                "name": "first_name_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "first_name_input"
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 50
+                    },
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Votre prénom..."
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_8",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 1130.147196249624,
+                    "y": 285.63532889892866
+                },
+                "name": "subject_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "subject_label"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "color: #a6adc8; font-size: 12px;"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Titre du message"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_9",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 995.2568937373651,
+                    "y": -60.56004031471793
+                },
+                "name": "last_name_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "last_name_input"
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 50
+                    },
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Votre nom de famille..."
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_10",
+                "type": "QHBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 815.6844496561631,
+                    "y": 76.79554646113401
+                },
+                "name": "email_row",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QHBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "email_row"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_15",
+                    "n_12"
+                ]
+            },
+            {
+                "id": "n_11",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 1008.8818771273884,
+                    "y": -412.0017133000473
+                },
+                "name": "first_name_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "first_name_label"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "color: #a6adc8; font-size: 12px;"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Prénom"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_12",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 1017.0977395468487,
+                    "y": 165.3003212813419
+                },
+                "name": "email_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "email_input"
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 120
+                    },
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "exemple@courriel.com"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_13",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 525.8609616747251,
+                    "y": 267.1552826444402
+                },
+                "name": "n_13",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "n_13"
+                    },
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Sujet"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_4"
+                ]
+            },
+            {
+                "id": "n_14",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 649.5938972157579,
+                    "y": 656.657395676956
+                },
+                "name": "message_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "message_layout"
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_24"
+                ]
+            },
+            {
+                "id": "n_15",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 1026.3726330630273,
+                    "y": 58.05462463621982
+                },
+                "name": "email_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "email_label"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "color: #a6adc8; font-size: 12px;"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Courriel"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_16",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 1138.5292521060617,
+                    "y": 411.4315273323225
+                },
+                "name": "subject_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "subject_input"
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 100
+                    },
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Résumez votre demande en quelques mots..."
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_17",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 482.87632672610744,
+                    "y": 478.79693642079764
+                },
+                "name": "proprity_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "proprity_group"
+                    },
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Priorité"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_18"
+                ]
+            },
+            {
+                "id": "n_18",
+                "type": "QHBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 668.536910983485,
+                    "y": 409.74236245275415
+                },
+                "name": "priority_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QHBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "priority_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 20
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_19",
+                    "n_20",
+                    "n_21"
+                ]
+            },
+            {
+                "id": "n_19",
+                "type": "QRadioButton",
+                "category": "widget",
+                "position": {
+                    "x": 888.3898962628805,
+                    "y": 434.3687844076843
+                },
+                "name": "radio_standard",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QRadioButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "radio_standard"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Standard"
+                    },
+                    {
+                        "name": "checked",
+                        "type": "bool",
+                        "value": true
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_20",
+                "type": "QRadioButton",
+                "category": "widget",
+                "position": {
+                    "x": 901.6496867440651,
+                    "y": 554.1909662983793
+                },
+                "name": "radio_urgent",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QRadioButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "radio_urgent"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "QRadioButton:checked { color: #f38ba8; } QRadioButton::indicator:checked { background-color: #f38ba8; border: 2px solid #f38ba8; border-radius: 5px; }"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Urgent"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_21",
+                "type": "QRadioButton",
+                "category": "widget",
+                "position": {
+                    "x": 862.3234738430436,
+                    "y": 662.6901152053405
+                },
+                "name": "radio_feedback",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QRadioButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "radio_feedback"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "QRadioButton:checked { color: #a6e3a1; } QRadioButton::indicator:checked { background-color: #a6e3a1; border: 2px solid #a6e3a1; border-radius: 5px; }"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Rétroaction"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_22",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": {
+                    "x": 451.48668059939905,
+                    "y": 651.1350558795045
+                },
+                "name": "message_group",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QGroupBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "message_group"
+                    },
+                    {
+                        "name": "title",
+                        "type": "str",
+                        "value": "Message"
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_14"
+                ]
+            },
+            {
+                "id": "n_23",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 636.4214488812981,
+                    "y": -50.564387270316516
+                },
+                "name": "identity_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "identity_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 12,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_5",
+                    "n_10"
+                ]
+            },
+            {
+                "id": "n_24",
+                "type": "QTextEdit",
+                "category": "widget",
+                "position": {
+                    "x": 851.421682483664,
+                    "y": 816.317794420964
+                },
+                "name": "message_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QTextEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "message_input"
+                    },
+                    {
+                        "name": "minimum_height",
+                        "type": "int",
+                        "value": 120
+                    },
+                    {
+                        "name": "placeholder_text",
+                        "type": "str",
+                        "value": "Décrivez votre demande en détail..."
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_25",
+                "type": "QPushButton",
+                "category": "widget",
+                "position": {
+                    "x": 66.05984708333844,
+                    "y": 450.33753149654063
+                },
+                "name": "submit_btn",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QPushButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "submit_btn"
+                    },
+                    {
+                        "name": "minimum_height",
+                        "type": "int",
+                        "value": 40
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Envoyer le message"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_2",
+                        "name": "clicked",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_26",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 1094.5131246931132,
+                    "y": -170.87612603269395
+                },
+                "name": "last_name_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "last_name_label"
+                    },
+                    {
+                        "name": "style_sheet",
+                        "type": "str",
+                        "value": "color: #a6adc8; font-size: 12px;"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Nom"
+                    }
+                ],
+                "function": [],
+                "child": []
+            }
+        ],
+        "links": [
+            {
+                "id": "e-n_25-signal-clicked-to-n_0-func-f_2",
+                "source": "sig_2",
+                "target": "f_2",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

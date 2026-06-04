@@ -1,0 +1,516 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-05-27T00:30:02.891Z",
+        "project_name": "projet_test_3",
+        "components": [
+            {
+                "id": "n_0",
+                "type": "PlayerProfil",
+                "category": "custom",
+                "position": {
+                    "x": 260,
+                    "y": 160
+                },
+                "name": "app",
+                "variable": [
+                    {
+                        "id": "v_1",
+                        "name": "name_input",
+                        "value": {
+                            "type": "id",
+                            "value": "n_7"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_2",
+                        "name": "volume_slider",
+                        "value": {
+                            "type": "id",
+                            "value": "n_11"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_3",
+                        "name": "advanced_cb",
+                        "value": {
+                            "type": "id",
+                            "value": "n_9"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_4",
+                        "name": "submit_btn",
+                        "value": {
+                            "type": "id",
+                            "value": "n_13"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_5",
+                        "name": "status_label",
+                        "value": {
+                            "type": "id",
+                            "value": "n_15"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "x"
+                            },
+                            {
+                                "type": "int",
+                                "value": 100,
+                                "name": "y"
+                            },
+                            {
+                                "type": "int",
+                                "value": 450,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 300,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "window_title",
+                        "type": "str",
+                        "value": "Configuration du Profil"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "f_1",
+                        "name": "on_advanced_toggled",
+                        "params": [
+                            "self",
+                            "checked"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "self.volume_slider.enabled = checked",
+                            "if checked:",
+                            "    self.name_input.placeholder_text = 'Chat activé, entrez un pseudo...'",
+                            "else:",
+                            "    self.name_input.placeholder_text = 'Chat désactivé...'"
+                        ]
+                    },
+                    {
+                        "id": "f_2",
+                        "name": "on_submit_clicked",
+                        "params": [
+                            "self",
+                            "checked"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "pseudo = self.name_input.text if self.name_input.text else 'Anonyme'",
+                            "vol = self.volume_slider.value if self.volume_slider.enabled else 'N/A'",
+                            "self.status_label.text = f'Profil sauvegardé : {pseudo} (Volume : {vol})'"
+                        ]
+                    }
+                ],
+                "child": [
+                    "n_1"
+                ]
+            },
+            {
+                "id": "n_1",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 507.1030901552641,
+                    "y": 233.07544468767009
+                },
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "main_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 15
+                    },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 20,
+                                "name": "left"
+                            },
+                            {
+                                "type": "int",
+                                "value": 20,
+                                "name": "top"
+                            },
+                            {
+                                "type": "int",
+                                "value": 20,
+                                "name": "right"
+                            },
+                            {
+                                "type": "int",
+                                "value": 20,
+                                "name": "bottom"
+                            }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_4",
+                    "n_9",
+                    "n_11",
+                    "n_13",
+                    "n_15"
+                ]
+            },
+            {
+                "id": "n_4",
+                "type": "QHBoxLayout",
+                "category": "layout",
+                "position": {
+                    "x": 856.729981966064,
+                    "y": 188.48017787506805
+                },
+                "name": "form_layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QHBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "form_layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 10
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_5",
+                    "n_7"
+                ]
+            },
+            {
+                "id": "n_5",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 1158.193985619254,
+                    "y": 142.1011003899619
+                },
+                "name": "name_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "name_label"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Pseudo :"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_7",
+                "type": "QLineEdit",
+                "category": "widget",
+                "position": {
+                    "x": 1164.1400211942675,
+                    "y": 316.91454629536196
+                },
+                "name": "name_input",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLineEdit",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "name_input"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Chat désactivé..."
+                    },
+                    {
+                        "name": "max_length",
+                        "type": "int",
+                        "value": 20
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_9",
+                "type": "QCheckBox",
+                "category": "widget",
+                "position": {
+                    "x": 937.5960657862491,
+                    "y": 404.9158728055633
+                },
+                "name": "advanced_cb",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QCheckBox",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "advanced_cb"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Activer le chat vocal"
+                    },
+                    {
+                        "name": "checked",
+                        "type": "bool",
+                        "value": false
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_1",
+                        "name": "toggled",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_11",
+                "type": "QSlider",
+                "category": "widget",
+                "position": {
+                    "x": 877.4871420536253,
+                    "y": 551.9448447833583
+                },
+                "name": "volume_slider",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QSlider",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "volume_slider"
+                    },
+                    {
+                        "name": "enabled",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "maximum",
+                        "type": "int",
+                        "value": 100
+                    },
+                    {
+                        "name": "value",
+                        "type": "int",
+                        "value": 50
+                    },
+                    {
+                        "name": "orientation",
+                        "type": "enum",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "Orientation"
+                        ],
+                        "value": "Horizontal"
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_13",
+                "type": "QPushButton",
+                "category": "widget",
+                "position": {
+                    "x": 821.0537685159825,
+                    "y": 685.6496985836851
+                },
+                "name": "submit_btn",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QPushButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "submit_btn"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Sauvegarder"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_2",
+                        "name": "clicked",
+                        "params": [],
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_15",
+                "type": "QLabel",
+                "category": "widget",
+                "position": {
+                    "x": 712.9984775807945,
+                    "y": 827.4894634464777
+                },
+                "name": "status_label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "status_label"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "En attente de sauvegarde..."
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "AlignmentFlag"
+                        ],
+                        "value": {
+                            "exclusive": {
+                                "AlignHorizontal": "AlignHCenter",
+                                "AlignVertical": "AlignVCenter"
+                            },
+                            "non_exclusive": []
+                        }
+                    }
+                ],
+                "function": [],
+                "child": []
+            }
+        ],
+        "links": [
+            {
+                "id": "e-n_13-signal-clicked-to-n_0-func-f_2",
+                "source": "sig_2",
+                "target": "f_2",
+                "type": "signal_slot"
+            },
+            {
+                "id": "e-n_9-signal-toggled-to-n_0-func-f_1",
+                "source": "sig_1",
+                "target": "f_1",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

@@ -1,0 +1,280 @@
+[
+    {
+        "id_project": "1",
+        "id_owner": "1",
+        "last_update": "2026-05-17T21:16:28.006Z",
+        "project_name": "",
+        "components": [
+            {
+                "id": "n_0",
+                "type": "HelloWorldApp",
+                "category": "dynamic",
+                "position": {
+                    "x": 260,
+                    "y": 160
+                },
+                "name": "app",
+                "variable": [
+                    {
+                        "id": "v_1",
+                        "name": "label",
+                        "value": {
+                            "type": "id",
+                            "value": "n_2"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_2",
+                        "name": "button",
+                        "value": {
+                            "type": "id",
+                            "value": "n_3"
+                        },
+                        "scope": "public",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_3",
+                        "name": "text_visible",
+                        "value": {
+                            "type": "bool",
+                            "value": false
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_4",
+                        "name": "text",
+                        "value": {
+                            "type": "tuple",
+                            "value": [
+                                {
+                                    "type": "str",
+                                    "value": "\"\""
+                                },
+                                {
+                                    "type": "str",
+                                    "value": "Hello World"
+                                }
+                            ]
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    },
+                    {
+                        "id": "v_5",
+                        "name": "button_text",
+                        "value": {
+                            "type": "tuple",
+                            "value": [
+                                {
+                                    "type": "str",
+                                    "value": "Afficher"
+                                },
+                                {
+                                    "type": "str",
+                                    "value": "Cacher"
+                                }
+                            ]
+                        },
+                        "scope": "private",
+                        "is_in_the_box": false
+                    }
+                ],
+                "inheritance": [
+                    {
+                        "type": "QWidget",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            {
+                                "type": "int",
+                                "value": 0,
+                                "name": "x"
+                            },
+                            {
+                                "type": "int",
+                                "value": 0,
+                                "name": "y"
+                            },
+                            {
+                                "type": "int",
+                                "value": 1000,
+                                "name": "width"
+                            },
+                            {
+                                "type": "int",
+                                "value": 1000,
+                                "name": "height"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "focus_policy",
+                        "type": "enum",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "FocusPolicy"
+                        ],
+                        "value": "ClickFocus"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "f_1",
+                        "name": "changed_text",
+                        "params": [
+                            "self"
+                        ],
+                        "is_intern": false,
+                        "code": [
+                            "self.text_visible = not self.text_visible",
+                            "self.button.text = self.button_text[self.text_visible]",
+                            "self.label.text = self.text[self.text_visible]",
+                            "self.button_text[self.text_visible]"
+                        ]
+                    }
+                ],
+                "child": [
+                    "n_1"
+                ]
+            },
+            {
+                "id": "n_1",
+                "type": "QVBoxLayout",
+                "category": "dynamic",
+                "position": {
+                    "x": 523.2048668387783,
+                    "y": 288.7156242919207
+                },
+                "name": "layout",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QVBoxLayout",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "layout"
+                    },
+                    {
+                        "name": "spacing",
+                        "type": "int",
+                        "value": 15
+                    }
+                ],
+                "function": [],
+                "child": [
+                    "n_2",
+                    "n_3"
+                ]
+            },
+            {
+                "id": "n_2",
+                "type": "QLabel",
+                "category": "dynamic",
+                "position": {
+                    "x": 874.4480200029566,
+                    "y": 213.57057444753434
+                },
+                "name": "label",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QLabel",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "label"
+                    },
+                    {
+                        "name": "alignment",
+                        "type": "flag",
+                        "namespace": [
+                            "PySide6.QtCore",
+                            "Qt",
+                            "AlignmentFlag"
+                        ],
+                        "value": {
+                            "exclusive": {
+                                "AlignHorizontal": "AlignLeft",
+                                "AlignVertical": "AlignTop"
+                            },
+                            "non_exclusive": []
+                        }
+                    }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_3",
+                "type": "QPushButton",
+                "category": "dynamic",
+                "position": {
+                    "x": 855.8345737741508,
+                    "y": 451.4540607101277
+                },
+                "name": "button",
+                "variable": [],
+                "inheritance": [
+                    {
+                        "type": "QPushButton",
+                        "module": "PySide6.QtWidgets"
+                    }
+                ],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    {
+                        "name": "object_name",
+                        "type": "str",
+                        "value": "button"
+                    },
+                    {
+                        "name": "text",
+                        "type": "str",
+                        "value": "Afficher"
+                    }
+                ],
+                "function": [
+                    {
+                        "id": "sig_1",
+                        "name": "clicked",
+                        "is_intern": true,
+                        "code": []
+                    }
+                ],
+                "child": []
+            }
+        ],
+        "links": [
+            {
+                "id": "e-n_3-signal-clicked-to-n_0-func-f_1",
+                "source": "sig_1",
+                "target": "f_1",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

@@ -1,0 +1,400 @@
+[
+    {
+        "id_project": "demo_2",
+        "id_owner": "1",
+        "last_update": "2026-05-28T12:00:00.000Z",
+        "project_name": "pourboire_tacos",
+        "components": [
+            {
+                "id": "n_0",
+                "type": "TacosApp",
+                "category": "custom",
+                "position": { "x": 0.0, "y": 0.0 },
+                "name": "app",
+                "variable": [
+                    { "id": "v_0", "name": "montant_slider", "value": { "type": "id", "value": "n_4" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_1", "name": "pourcentage_slider", "value": { "type": "id", "value": "n_8" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_2", "name": "montant_label", "value": { "type": "id", "value": "n_5" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_3", "name": "pourcentage_label", "value": { "type": "id", "value": "n_9" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_4", "name": "pourboire_label", "value": { "type": "id", "value": "n_11" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_5", "name": "total_label", "value": { "type": "id", "value": "n_12" }, "scope": "public", "is_in_the_box": false },
+                    { "id": "v_6", "name": "emoji_label", "value": { "type": "id", "value": "n_13" }, "scope": "public", "is_in_the_box": false }
+                ],
+                "inheritance": [{ "type": "QWidget", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "app" },
+                    {
+                        "name": "geometry",
+                        "type": "QRect",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 350, "name": "x" },
+                            { "type": "int", "value": 150, "name": "y" },
+                            { "type": "int", "value": 460, "name": "width" },
+                            { "type": "int", "value": 520, "name": "height" }
+                        ]
+                    },
+                    { "name": "window_title", "type": "str", "value": "Taco Loco - Calculateur de pourboire" },
+                    { "name": "style_sheet", "type": "str", "value": "QWidget { background-color: #fff8e7; color: #3d2b00; font-family: Segoe UI; font-size: 13px; } QGroupBox { border: 2px solid #f4a226; border-radius: 10px; margin-top: 14px; padding-top: 10px; color: #c45c00; font-weight: bold; font-size: 13px; } QGroupBox::title { subcontrol-origin: margin; left: 12px; } QSlider::groove:horizontal { background: #f4d7a0; border-radius: 4px; height: 8px; } QSlider::handle:horizontal { background: #f4a226; border: 2px solid #c45c00; width: 20px; height: 20px; margin: -6px 0; border-radius: 10px; } QSlider::sub-page:horizontal { background: #f4a226; border-radius: 4px; } QLabel { background-color: transparent; border: none; } QLabel#pourboire_label { background-color: #fde68a; border: 2px solid #f4a226; border-radius: 8px; padding: 8px; font-size: 20px; font-weight: bold; color: #c45c00; } QLabel#total_label { background-color: #f4a226; border: 2px solid #c45c00; border-radius: 8px; padding: 8px; font-size: 22px; font-weight: bold; color: #fff8e7; } QLabel#emoji_label { font-size: 32px; background-color: transparent; border: none; }" }
+                ],
+                "function": [
+                    {
+                        "id": "f_0",
+                        "name": "on_montant_changed",
+                        "params": ["self", "value"],
+                        "is_intern": false,
+                        "code": [
+                            "self.montant_label.text = f'Facture : {value} $'",
+                            "pourcentage = self.pourcentage_slider.value",
+                            "pourboire = value * pourcentage / 100",
+                            "total = value + pourboire",
+                            "self.pourboire_label.text = f'{pourboire:.2f} $'",
+                            "self.total_label.text = f'Total : {total:.2f} $'",
+                            "if pourcentage >= 25:",
+                            "    self.emoji_label.text = 'Tres genereux !'",
+                            "elif pourcentage >= 15:",
+                            "    self.emoji_label.text = 'Merci beaucoup !'",
+                            "elif pourcentage >= 10:",
+                            "    self.emoji_label.text = 'Merci !'",
+                            "else:",
+                            "    self.emoji_label.text = 'Hmm...'"
+                        ]
+                    },
+                    {
+                        "id": "f_1",
+                        "name": "on_pourcentage_changed",
+                        "params": ["self", "value"],
+                        "is_intern": false,
+                        "code": [
+                            "self.pourcentage_label.text = f'Pourboire : {value} %'",
+                            "montant = self.montant_slider.value",
+                            "pourboire = montant * value / 100",
+                            "total = montant + pourboire",
+                            "self.pourboire_label.text = f'{pourboire:.2f} $'",
+                            "self.total_label.text = f'Total : {total:.2f} $'",
+                            "if value >= 25:",
+                            "    self.emoji_label.text = 'Tres genereux !'",
+                            "elif value >= 15:",
+                            "    self.emoji_label.text = 'Merci beaucoup !'",
+                            "elif value >= 10:",
+                            "    self.emoji_label.text = 'Merci !'",
+                            "else:",
+                            "    self.emoji_label.text = 'Hmm...'"
+                        ]
+                    }
+                ],
+                "child": ["n_1"]
+            },
+            {
+                "id": "n_1",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": { "x": 300.0, "y": 0.0 },
+                "name": "main_layout",
+                "variable": [],
+                "inheritance": [{ "type": "QVBoxLayout", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "main_layout" },
+                    { "name": "spacing", "type": "int", "value": 16 },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 20, "name": "left" },
+                            { "type": "int", "value": 20, "name": "top" },
+                            { "type": "int", "value": 20, "name": "right" },
+                            { "type": "int", "value": 20, "name": "bottom" }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": ["n_2", "n_6", "n_10", "n_13"]
+            },
+            {
+                "id": "n_2",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": { "x": 600.0, "y": 0.0 },
+                "name": "montant_group",
+                "variable": [],
+                "inheritance": [{ "type": "QGroupBox", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "montant_group" },
+                    { "name": "title", "type": "str", "value": "Montant de la facture" }
+                ],
+                "function": [],
+                "child": ["n_3"]
+            },
+            {
+                "id": "n_3",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": { "x": 900.0, "y": 0.0 },
+                "name": "montant_layout",
+                "variable": [],
+                "inheritance": [{ "type": "QVBoxLayout", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "montant_layout" },
+                    { "name": "spacing", "type": "int", "value": 8 },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 12, "name": "left" },
+                            { "type": "int", "value": 8, "name": "top" },
+                            { "type": "int", "value": 12, "name": "right" },
+                            { "type": "int", "value": 12, "name": "bottom" }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": ["n_5", "n_4"]
+            },
+            {
+                "id": "n_5",
+                "type": "QLabel",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 0.0 },
+                "name": "montant_label",
+                "variable": [],
+                "inheritance": [{ "type": "QLabel", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "montant_label" },
+                    { "name": "text", "type": "str", "value": "Facture : 50 $" }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_4",
+                "type": "QSlider",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 150.0 },
+                "name": "montant_slider",
+                "variable": [],
+                "inheritance": [{ "type": "QSlider", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "montant_slider" },
+                    { "name": "minimum", "type": "int", "value": 5 },
+                    { "name": "maximum", "type": "int", "value": 200 },
+                    { "name": "value", "type": "int", "value": 50 },
+                    { "name": "single_step", "type": "int", "value": 5 },
+                    { "name": "minimum_height", "type": "int", "value": 36 },
+                    {
+                        "name": "orientation",
+                        "type": "enum",
+                        "namespace": ["PySide6.QtCore", "Qt", "Orientation"],
+                        "value": "Horizontal"
+                    }
+                ],
+                "function": [
+                    { "id": "sig_0", "name": "valueChanged", "params": [], "is_intern": true, "code": [] }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_6",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": { "x": 600.0, "y": 250.0 },
+                "name": "pourcentage_group",
+                "variable": [],
+                "inheritance": [{ "type": "QGroupBox", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "pourcentage_group" },
+                    { "name": "title", "type": "str", "value": "Pourcentage du pourboire" }
+                ],
+                "function": [],
+                "child": ["n_7"]
+            },
+            {
+                "id": "n_7",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": { "x": 900.0, "y": 250.0 },
+                "name": "pourcentage_layout",
+                "variable": [],
+                "inheritance": [{ "type": "QVBoxLayout", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "pourcentage_layout" },
+                    { "name": "spacing", "type": "int", "value": 8 },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 12, "name": "left" },
+                            { "type": "int", "value": 8, "name": "top" },
+                            { "type": "int", "value": 12, "name": "right" },
+                            { "type": "int", "value": 12, "name": "bottom" }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": ["n_9", "n_8"]
+            },
+            {
+                "id": "n_9",
+                "type": "QLabel",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 250.0 },
+                "name": "pourcentage_label",
+                "variable": [],
+                "inheritance": [{ "type": "QLabel", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "pourcentage_label" },
+                    { "name": "text", "type": "str", "value": "Pourboire : 15 %" }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_8",
+                "type": "QSlider",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 400.0 },
+                "name": "pourcentage_slider",
+                "variable": [],
+                "inheritance": [{ "type": "QSlider", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "pourcentage_slider" },
+                    { "name": "minimum", "type": "int", "value": 0 },
+                    { "name": "maximum", "type": "int", "value": 30 },
+                    { "name": "value", "type": "int", "value": 15 },
+                    { "name": "single_step", "type": "int", "value": 1 },
+                    { "name": "minimum_height", "type": "int", "value": 36 },
+                    {
+                        "name": "orientation",
+                        "type": "enum",
+                        "namespace": ["PySide6.QtCore", "Qt", "Orientation"],
+                        "value": "Horizontal"
+                    }
+                ],
+                "function": [
+                    { "id": "sig_1", "name": "valueChanged", "params": [], "is_intern": true, "code": [] }
+                ],
+                "child": []
+            },
+            {
+                "id": "n_10",
+                "type": "QGroupBox",
+                "category": "widget",
+                "position": { "x": 600.0, "y": 500.0 },
+                "name": "resultat_group",
+                "variable": [],
+                "inheritance": [{ "type": "QGroupBox", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "resultat_group" },
+                    { "name": "title", "type": "str", "value": "Resultat" }
+                ],
+                "function": [],
+                "child": ["n_14"]
+            },
+            {
+                "id": "n_14",
+                "type": "QVBoxLayout",
+                "category": "layout",
+                "position": { "x": 900.0, "y": 500.0 },
+                "name": "resultat_layout",
+                "variable": [],
+                "inheritance": [{ "type": "QVBoxLayout", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "resultat_layout" },
+                    { "name": "spacing", "type": "int", "value": 10 },
+                    {
+                        "name": "contents_margins",
+                        "type": "QMargins",
+                        "module": "PySide6.QtCore",
+                        "value": [
+                            { "type": "int", "value": 12, "name": "left" },
+                            { "type": "int", "value": 8, "name": "top" },
+                            { "type": "int", "value": 12, "name": "right" },
+                            { "type": "int", "value": 12, "name": "bottom" }
+                        ]
+                    }
+                ],
+                "function": [],
+                "child": ["n_11", "n_12"]
+            },
+            {
+                "id": "n_11",
+                "type": "QLabel",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 500.0 },
+                "name": "pourboire_label",
+                "variable": [],
+                "inheritance": [{ "type": "QLabel", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "pourboire_label" },
+                    { "name": "text", "type": "str", "value": "7.50 $" },
+                    { "name": "minimum_height", "type": "int", "value": 44 }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_12",
+                "type": "QLabel",
+                "category": "widget",
+                "position": { "x": 1200.0, "y": 650.0 },
+                "name": "total_label",
+                "variable": [],
+                "inheritance": [{ "type": "QLabel", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "total_label" },
+                    { "name": "text", "type": "str", "value": "Total : 57.50 $" },
+                    { "name": "minimum_height", "type": "int", "value": 48 }
+                ],
+                "function": [],
+                "child": []
+            },
+            {
+                "id": "n_13",
+                "type": "QLabel",
+                "category": "widget",
+                "position": { "x": 600.0, "y": 750.0 },
+                "name": "emoji_label",
+                "variable": [],
+                "inheritance": [{ "type": "QLabel", "module": "PySide6.QtWidgets" }],
+                "module": "PySide6.QtWidgets",
+                "properties": [
+                    { "name": "object_name", "type": "str", "value": "emoji_label" },
+                    { "name": "text", "type": "str", "value": "Merci beaucoup !" },
+                    { "name": "minimum_height", "type": "int", "value": 44 }
+                ],
+                "function": [],
+                "child": []
+            }
+        ],
+        "links": [
+            {
+                "id": "e-n_4-sig_0-to-n_0-f_0",
+                "source": "sig_0",
+                "target": "f_0",
+                "type": "signal_slot"
+            },
+            {
+                "id": "e-n_8-sig_1-to-n_0-f_1",
+                "source": "sig_1",
+                "target": "f_1",
+                "type": "signal_slot"
+            }
+        ]
+    }
+]

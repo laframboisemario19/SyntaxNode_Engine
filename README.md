@@ -113,9 +113,26 @@ pip install -r requirements.txt
 
 ---
 
+## Exemples
+
+Le dossier `examples/` contient plusieurs projets prêts à utiliser :
+
+| Dossier | Description |
+|---|---|
+| `hello_world_app/` | Fenêtre minimale — point de départ idéal |
+| `formulaire/` | Formulaire avec champs de saisie et bouton de soumission |
+| `demo_password/` | Gestionnaire de mots de passe avec validation |
+| `demo_tacos/` | Application de commande avec liste et total dynamique |
+| `player_profil/` | Fiche de profil joueur avec propriétés personnalisées |
+| `personnage_rpg/` | Personnage RPG avec fonctions et variables personnalisées |
+| `integration_app/` | Application complète avec signaux/slots et logique métier |
+
+---
+
 ## Utilisation
 
 ```python
+import json
 from engine import SyntaxNodeEngine, PredictionValue
 from engine.strategies import ConfigType
 
@@ -123,16 +140,22 @@ engine = SyntaxNodeEngine()
 engine.set_language("python")
 engine.set_lib("qt", ConfigType.DEFAULT)
 
-# Générer le code (retourne un BytesIO contenant l'archive ZIP)
-with open("mon_projet.json") as f:
+# Charger un exemple fourni
+with open("examples/hello_world_app/projet1.json") as f:
     data = json.load(f)
 
+# Générer le code (retourne un BytesIO contenant l'archive ZIP)
 zip_buffer = engine.get_code_files(data)
+
+# Extraire et afficher le code généré
+import zipfile, io
+with zipfile.ZipFile(zip_buffer) as z:
+    print(z.read("main_application.py").decode())
 
 # Valider un schéma sans générer de code
 is_valid, errors = engine.validate_data(data)
 
-# Générer une image de prévisualisation d'un composant
+# Générer une image de prévisualisation
 bitmap = engine.generate_bitmap(data, target_id="node_id")
 ```
 
