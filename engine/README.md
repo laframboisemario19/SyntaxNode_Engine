@@ -99,8 +99,8 @@ JSON (schéma nodal)
 
 ```bash
 # Cloner le dépôt
-git clone https://github.com/<votre-nom>/syntaxnode-engine.git
-cd syntaxnode-engine
+git clone https://github.com/laframboisemario19/SyntaxNode_Engine.git
+cd SyntaxNode_Engine
 
 # Créer un environnement virtuel
 python -m venv .venv
@@ -116,7 +116,8 @@ pip install -r requirements.txt
 ## Utilisation
 
 ```python
-from engine.core import SyntaxNodeEngine, ConfigType
+from engine import SyntaxNodeEngine, PredictionValue
+from engine.strategies import ConfigType
 
 engine = SyntaxNodeEngine()
 engine.set_language("python")
