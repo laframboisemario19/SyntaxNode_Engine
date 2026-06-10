@@ -127,6 +127,8 @@ Le dossier `examples/` contient plusieurs projets prêts à utiliser :
 | `personnage_rpg/` | Personnage RPG avec fonctions et variables personnalisées |
 | `integration_app/` | Application complète avec signaux/slots et logique métier |
 
+> Ces exemples sont directement importables sur [www.syntaxnode.ca](https://www.syntaxnode.ca) via le bouton bleu **Importer** — explorez les projets déjà construits directement dans l'application web, sans installation.
+
 ---
 
 ## Utilisation
